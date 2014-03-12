@@ -27,8 +27,7 @@ import com.tapjoy.reach.service.ResponseModel;
 public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 	@Override
-	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e)
-			throws Exception {
+	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
 
 		HttpRequest request = (HttpRequest) e.getMessage();
 		String reqStr = request.getUri();

@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.log4j.Logger;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -25,6 +26,7 @@ import com.tapjoy.reach.helper.Helper;
 public class CountsHelper implements Helper<String> {
 	
 	private static Gson gson = new GsonBuilder().create();
+	private static Logger logger = Logger.getLogger(CountsHelper.class);
 
 	@Override
 	public String getResult(Map<String, List<String>> p) {
@@ -46,11 +48,10 @@ public class CountsHelper implements Helper<String> {
 			try {
 				res = HBaseWrapper.getOneRecordInTable(key, OverallConfig.COUNTS_TABLE, 0);
 			} catch (ClassNotFoundException | SQLException | InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				logger.error(e1);
 			}
 			if (res == null) {
-				System.out.println("error");
+				logger.error("Error getting results from HBase");
 			}
 			List<String> list = HBaseWrapper.getHBaseResultToArray(res, "v", "val", 10);
 			System.out.println(list);

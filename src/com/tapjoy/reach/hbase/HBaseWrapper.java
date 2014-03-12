@@ -310,25 +310,26 @@ public class HBaseWrapper {
             Result rs = table.get(get);
             return rs;
         } catch (Exception e) {
-
+        	e.printStackTrace();
+        	logger.error(e);
         }
         return null;
     }
     
     public static Result getOneRecordInTable(String key, String tableName,
             int token) throws ClassNotFoundException,
-            SQLException, InterruptedException { // added by LJ
+            SQLException, InterruptedException { 
         byte[] rowKey = null;
 
         try {
         	HTableInterface table = htpool.getTable(tableName);
-            key.replace(':', ','); // added 10-30
             rowKey = HBaseUtil.constructKey(token, key);
             Get get = new Get(rowKey);
             Result rs = table.get(get);
             return rs;
         } catch (Exception e) {
-
+        	e.printStackTrace();
+        	logger.error(e);
         }
         return null;
     }
