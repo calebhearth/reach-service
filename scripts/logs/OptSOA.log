@@ -1,0 +1,5 @@
+2014-03-04 14:33:22,374 [main] INFO  com.tapjoy.reach.service.ReachService - ++++++++++++++++++++++++++
+2014-03-04 14:33:22,376 [main] INFO  com.tapjoy.reach.service.ReachService - Optimization service begin
+2014-03-04 14:33:22,377 [main] INFO  com.tapjoy.reach.service.ReachService - ++++++++++++++++++++++++++
+2014-03-04 14:33:22,661 [main] INFO  com.tapjoy.reach.service.ServiceEngine - Server is up, ready to serve requests
+2014-03-04 14:33:37,602 [Thread-2] INFO  com.tapjoy.reach.service.ServiceEngine - Shutting down main server

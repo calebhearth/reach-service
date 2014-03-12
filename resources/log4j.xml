@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+		<param name="Threshold" value="debug" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" />
+		</layout>
+	</appender>
+
+	<!-- FILE SETUP -->
+	<appender name="FileAppender" class="org.apache.log4j.RollingFileAppender">
+		<param name="Threshold" value="debug" />
+		<param name="File" value="logs/OptSOA.log" />
+        	<param name="MaxFileSize"    value="32MB"/>
+        	<param name="MaxBackupIndex" value="5000"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="FileAysncAppender" class="org.apache.log4j.AsyncAppender">
+		<appender-ref ref="FileAppender" />
+	</appender>
+	
+	<logger name="com.tapjoy.opt" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="FileAysncAppender" />
+    </logger>
+	
+	<root>
+		<level value="info" />
+		<appender-ref ref="ConsoleAppender" />
+		<appender-ref ref="FileAysncAppender" />
+	</root>
+
+</log4j:configuration>
