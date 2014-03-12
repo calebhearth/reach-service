@@ -28,7 +28,7 @@ public class ReachService {
 	public static void main(String[] args) {
 		
 		logger.info("++++++++++++++++++++++++++");
-		logger.info("Reach service begin");
+		logger.info("Reach service started");
 		logger.info("++++++++++++++++++++++++++");
 		
 		

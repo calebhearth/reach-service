@@ -13,7 +13,7 @@
 	<!-- FILE SETUP -->
 	<appender name="FileAppender" class="org.apache.log4j.RollingFileAppender">
 		<param name="Threshold" value="debug" />
-		<param name="File" value="logs/OptSOA.log" />
+		<param name="File" value="logs/ReachService.log" />
         	<param name="MaxFileSize"    value="32MB"/>
         	<param name="MaxBackupIndex" value="5000"/>
 
