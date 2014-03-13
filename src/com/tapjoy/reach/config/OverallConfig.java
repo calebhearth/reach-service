@@ -9,9 +9,9 @@ public class OverallConfig {
 
 	public static String REACH_HOME_DIR = OverallConfig.class
 			.getProtectionDomain().getCodeSource().getLocation().getPath()
-			.split("TapjoyOptService")[0]
+			.split("ReachService")[0]
 			+ "../bin/";
 	
-	public static final String COUNTS_TABLE = "reach";
+	
 
 }

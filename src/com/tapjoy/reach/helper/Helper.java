@@ -3,8 +3,10 @@ package com.tapjoy.reach.helper;
 import java.util.List;
 import java.util.Map;
 
-public interface Helper<T> {
+import com.tapjoy.reach.service.ResponseModel;
+
+public interface Helper {
 	
-	public T getResult(Map<String, List<String>> params);
+	public ResponseModel getResult(Map<String, List<String>> params);
 
 }

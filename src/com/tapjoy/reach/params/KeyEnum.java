@@ -1,4 +1,4 @@
-package com.tapjoy.reach.counts;
+package com.tapjoy.reach.params;
 
 public enum KeyEnum {
 	device_size("device size"),
@@ -26,5 +26,9 @@ public enum KeyEnum {
 			}
 		}
 		return null;
+	}
+	
+	public static String getValue(KeyEnum key){
+		return key.keyword;
 	}
 }

@@ -34,19 +34,16 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 		Map<String, List<String>> params = parseReq(reqStr);
 		if (params == null || params.size() == 0) {
 			ResponseModel responseModel = new ResponseModel("Bad parameters",
-					HttpResponseStatus.BAD_REQUEST, e, "application/json");
-			writeResponse(responseModel);
+					HttpResponseStatus.BAD_REQUEST, "application/json");
+			writeResponse(responseModel,e);
 			return;
 		}
-		Helper<String> countsHelper = new CountsHelper();
-		String resuts = countsHelper.getResult(params);
-		System.out.println(resuts);
-		ResponseModel responseModel = new ResponseModel(resuts,
-				HttpResponseStatus.OK, e, "application/json");
-		writeResponse(responseModel);
+		Helper countsHelper = new CountsHelper();
+		ResponseModel results = countsHelper.getResult(params);
+		writeResponse(results,e);
 	}
 
-	private void writeResponse(ResponseModel responseModel) {
+	private void writeResponse(ResponseModel responseModel, MessageEvent e) {
 
 		// Build the response object.
 		HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1,
@@ -57,8 +54,7 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 				responseModel.getContentType());
 
 		// Write the response.
-		ChannelFuture future = responseModel.getMessageEvent().getChannel()
-				.write(response);
+		ChannelFuture future = e.getChannel().write(response);
 
 		future.addListener(ChannelFutureListener.CLOSE);
 

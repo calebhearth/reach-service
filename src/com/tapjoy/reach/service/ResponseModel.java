@@ -7,19 +7,13 @@ public class ResponseModel {
 
 	private String response;
 	private HttpResponseStatus responseStatus;
-	private MessageEvent messageEvent;
 	private String contentType;
 
 	public ResponseModel(String response, HttpResponseStatus status,
-			MessageEvent messageEvent, String contentType) {
+			String contentType) {
 		this.response = response;
 		this.responseStatus = status;
-		this.messageEvent = messageEvent;
 		this.contentType = contentType;
-	}
-
-	public ResponseModel(MessageEvent messageEvent) {
-		this.messageEvent = messageEvent;
 	}
 
 	public String getResponse() {
@@ -36,14 +30,6 @@ public class ResponseModel {
 
 	public void setResponseStatus(HttpResponseStatus responseStatus) {
 		this.responseStatus = responseStatus;
-	}
-
-	public MessageEvent getMessageEvent() {
-		return messageEvent;
-	}
-
-	public void setMessageEvent(MessageEvent messageEvent) {
-		this.messageEvent = messageEvent;
 	}
 
 	public String getContentType() {
