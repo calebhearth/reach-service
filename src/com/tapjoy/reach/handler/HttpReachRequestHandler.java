@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -20,6 +21,7 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.handler.codec.http.QueryStringDecoder;
 import org.jboss.netty.util.CharsetUtil;
 
+import com.tapjoy.reach.config.OverallConfig;
 import com.tapjoy.reach.counts.CountsHelper;
 import com.tapjoy.reach.helper.Helper;
 import com.tapjoy.reach.service.ResponseModel;
@@ -31,6 +33,10 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 		HttpRequest request = (HttpRequest) e.getMessage();
 		String reqStr = request.getUri();
+		if(StringUtils.startsWithIgnoreCase(reqStr, "/health")){
+			reqStr = OverallConfig.healthCheck;
+		}
+		
 		Map<String, List<String>> params = parseReq(reqStr);
 		if (params == null || params.size() == 0) {
 			ResponseModel responseModel = new ResponseModel("Bad parameters",

@@ -37,30 +37,73 @@ public class CountsHelper implements Helper {
 
 	@Override
 	public ResponseModel getResult(Map<String, List<String>> p) {
-		Map<String, List<String>> params = new HashMap<String, List<String>>(p);
+		try {
+			Map<String, List<String>> params = new HashMap<String, List<String>>(
+					p);
 
-		List<String> personas = params.get(KeyEnum
-				.getValue(KeyEnum.persona_name));
-		params.remove(KeyEnum.getValue(KeyEnum.persona_name));
+			boolean dataQuality = checkDataQuality(p);
+			if (!dataQuality) {
+				ResponseModel model = new ResponseModel("Invalid parameters",
+						HttpResponseStatus.BAD_REQUEST, "application/json");
+				return model;
+			}
 
-		List<String> sources = params.get(KeyEnum.getValue(KeyEnum.source));
-		if (sources == null || sources.size() == 0) {
-			logger.error("No source in request");
-			ResponseModel model = new ResponseModel("HBase error",
+			List<String> personas = params.get(KeyEnum
+					.getValue(KeyEnum.persona_name));
+			params.remove(KeyEnum.getValue(KeyEnum.persona_name));
+
+			List<String> sources = params.get(KeyEnum.getValue(KeyEnum.source));
+			if (sources == null || sources.size() == 0) {
+				logger.error("No source in request");
+				ResponseModel model = new ResponseModel("HBase error",
+						HttpResponseStatus.INTERNAL_SERVER_ERROR,
+						"application/json");
+				return model;
+			}
+			params.remove(KeyEnum.getValue(KeyEnum.source));
+
+			Set<Entry<String, List<String>>> entries = params.entrySet();
+			List<Entry<String, List<String>>> entriesList = new ArrayList<Map.Entry<String, List<String>>>(
+					entries);
+
+			List<String> keyList;
+			if (entriesList.size() == 0) {
+				String key = "";
+				for (int i = 1; i <= KeyEnum.values().length - 2; i++) {
+					key = (key.length() > 0 ? key + "-" : key) + "$";
+				}
+				keyList = new ArrayList<String>();
+				keyList.add(key);
+			} else {
+				Collections.sort(entriesList, new KeyComparator());
+				keyList = new KeyParser().collectKeys("", entriesList);
+			}
+
+			ResponseModel model = getHBaseResults(keyList, personas, sources);
+			return model;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			logger.error(ex);
+			ResponseModel model = new ResponseModel("Unknown error",
 					HttpResponseStatus.INTERNAL_SERVER_ERROR,
 					"application/json");
 			return model;
 		}
+	}
 
-		params.remove(KeyEnum.getValue(KeyEnum.source));
-		Set<Entry<String, List<String>>> entries = params.entrySet();
-		List<Entry<String, List<String>>> entriesList = new ArrayList<Map.Entry<String, List<String>>>(
-				entries);
+	private boolean checkDataQuality(Map<String, List<String>> p) {
+		if (p.get(KeyEnum.getValue(KeyEnum.device_os_version)) != null
+				&& p.get(KeyEnum.getValue(KeyEnum.platform)) == null) {
+			return false;
+		} else if (p.get(KeyEnum.getValue(KeyEnum.geoip_country)) != null
+				&& p.get(KeyEnum.getValue(KeyEnum.geoip_continent)) == null) {
+			return false;
+		} else if (p.get(KeyEnum.getValue(KeyEnum.geoip_region)) != null
+				&& p.get(KeyEnum.getValue(KeyEnum.geoip_country)) == null) {
+			return false;
+		}
 
-		Collections.sort(entriesList, new KeyComparator());
-		List<String> keyList = new KeyParser().collectKeys("", entriesList);
-		ResponseModel model = getHBaseResults(keyList, personas, sources);
-		return model;
+		return true;
 	}
 
 	private ResponseModel getHBaseResults(List<String> keyList,
@@ -85,11 +128,7 @@ public class CountsHelper implements Helper {
 			}
 
 			if (res == null) {
-				logger.error("Error getting results from HBase");
-				model = new ResponseModel("HBase error",
-						HttpResponseStatus.INTERNAL_SERVER_ERROR,
-						"application/json");
-				return model;
+				continue;
 			}
 
 			if (personas == null || personas.size() == 0) {
@@ -97,7 +136,10 @@ public class CountsHelper implements Helper {
 						CountsHbaseConstants.COLUMN_FAMILY,
 						CountsHbaseConstants.UDID_COL_QUALIFIER);
 				System.out.println(udidString);
-				udidsCount += Integer.parseInt(udidString);
+				if(StringUtils.isNotBlank(udidString)){
+					udidsCount += Integer.parseInt(udidString);
+				}
+				
 			}
 
 			else {
@@ -115,8 +157,8 @@ public class CountsHelper implements Helper {
 					String personaValue = HBaseWrapper.getHBaseResultToString(
 							res, CountsHbaseConstants.COLUMN_FAMILY,
 							personalColQualifier);
-					int personaUdids = calculateCounts(
-							personaId+1, personaValue);
+					int personaUdids = calculateCounts(personaId + 1,
+							personaValue);
 					System.out.println("persona:" + persona + " #udids:"
 							+ personaUdids);
 					udidsCount += personaUdids;

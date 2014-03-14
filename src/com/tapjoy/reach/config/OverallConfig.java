@@ -12,6 +12,9 @@ public class OverallConfig {
 			.split("ReachService")[0]
 			+ "../bin/";
 	
+	// The actual request will be used for health check ("http://reach:8888/health")
+		public static String healthCheck = "/?geoip_country=US&sources=offerwall&geoip_continent=NA";	
+	
 	
 
 }
