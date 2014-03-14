@@ -140,7 +140,6 @@ public class CountsHelper implements Helper {
 				String udidString = HBaseWrapper.getHBaseResultToString(res,
 						CountsHbaseConstants.COLUMN_FAMILY,
 						CountsHbaseConstants.UDID_COL_QUALIFIER);
-				System.out.println(udidString);
 				if(StringUtils.isNotBlank(udidString)){
 					udidsCount += Integer.parseInt(udidString);
 				}
@@ -164,8 +163,6 @@ public class CountsHelper implements Helper {
 							personalColQualifier);
 					int personaUdids = calculateCounts((personaId%10)-1,
 							personaValue);
-					System.out.println("persona:" + persona + " #udids:"
-							+ personaUdids);
 					udidsCount += personaUdids;
 
 				}
@@ -185,7 +182,6 @@ public class CountsHelper implements Helper {
 				}
 
 				int imps = calculateCounts(s.ordinal(), sourceValue);
-				System.out.println("source:" + source + " #imps:" + imps);
 				impCount += imps;
 			}
 

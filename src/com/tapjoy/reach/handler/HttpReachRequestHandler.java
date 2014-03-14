@@ -80,7 +80,6 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 			String newKey = key.replace("[]", "");
 			cleanParams.put(newKey, value);
 		}
-		System.out.println(cleanParams);
 		return cleanParams;
 	}
 
