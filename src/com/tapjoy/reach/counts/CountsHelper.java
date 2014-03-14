@@ -130,6 +130,11 @@ public class CountsHelper implements Helper {
 			if (res == null) {
 				continue;
 			}
+			
+			if(res.list() == null){
+				logger.error("No targeting found for key:"+key);
+				continue;
+			}
 
 			if (personas == null || personas.size() == 0) {
 				String udidString = HBaseWrapper.getHBaseResultToString(res,
