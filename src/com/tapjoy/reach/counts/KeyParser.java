@@ -68,9 +68,9 @@ public class KeyParser {
 					int diff = length - rank;
 					for(int i =1;i<= diff; i++ ){
 						newKey = (newKey.length() > 0 ? newKey+"-" : newKey) + "$";
-					}
-					keyList.add(newKey);
+					}				
 				}
+				keyList.add(newKey);
 			}
 		}
 
