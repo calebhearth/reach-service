@@ -162,7 +162,7 @@ public class CountsHelper implements Helper {
 					String personaValue = HBaseWrapper.getHBaseResultToString(
 							res, CountsHbaseConstants.COLUMN_FAMILY,
 							personalColQualifier);
-					int personaUdids = calculateCounts(personaId + 1,
+					int personaUdids = calculateCounts((personaId%10)-1,
 							personaValue);
 					System.out.println("persona:" + persona + " #udids:"
 							+ personaUdids);
