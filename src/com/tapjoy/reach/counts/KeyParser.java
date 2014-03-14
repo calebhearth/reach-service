@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.tapjoy.reach.params.KeyEnum;
+
 public class KeyParser {
 
 	private List<String> keyList;
@@ -14,23 +16,62 @@ public class KeyParser {
 
 	public List<String> collectKeys(String key,
 			List<Entry<String, List<String>>> entries) {
-		if (entries.size() == 1) {
+		/*if (entries.size() == 1) {
 			Entry<String, List<String>> entry = entries.get(0);
 			List<String> value = entry.getValue();
+			int numKeys;
+			
+			if(key.length() == 0){
+				numKeys = 0;
+			}
+			else{
+				numKeys = key.split("-").length;
+			}
+			
+			
 			for (String v : value) {
 				String newKey = key + (key.length() > 0 ? "-" + v : v);
 				keyList.add(newKey);
 			}
 			return keyList;
-		}
+		}*/
 
 		Entry<String, List<String>> entry = entries.get(0);
+		String param = entry.getKey();
+		KeyEnum keyEnum = KeyEnum.fromString(param);
+		int rank = keyEnum.ordinal();
+		int presentPos = 0;
+		
+		if (key.length() > 0) {
+			String[] keyParts = key.split("-");
+			presentPos = keyParts.length;
+		}
+		
+		if (rank > presentPos) {
+			for (int i = 1; i <= rank - presentPos; i++) {
+				key = (key.length() > 0 ? key+"-" : key) + "$";
+			}
+		}
+		
 		List<String> value = entry.getValue();
 		for (String v : value) {
-			String newKey = key + (key.length() > 0 ? "-" + v : v);
+			String newKey = (key.length() > 0 ? key+"-" : key) + v;
 			List<Entry<String, List<String>>> subList = entries.subList(1,
 					entries.size());
-			collectKeys(newKey, subList);
+			if(subList.size() > 0){
+				collectKeys(newKey, subList);
+			}
+			else{
+				int length = KeyEnum.values().length - 3;
+				if(rank < length){ //subtract personas, sources
+					//append $
+					int diff = length - rank;
+					for(int i =1;i<= diff; i++ ){
+						newKey = (newKey.length() > 0 ? newKey+"-" : newKey) + "$";
+					}
+					keyList.add(newKey);
+				}
+			}
 		}
 
 		return keyList;

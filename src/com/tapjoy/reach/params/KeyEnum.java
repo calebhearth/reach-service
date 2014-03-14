@@ -1,17 +1,19 @@
 package com.tapjoy.reach.params;
 
 public enum KeyEnum {
-	device_size("device size"),
+	//device_size("device size"),
 	platform("platform"),
 	device_os_version("os_versions"),
-	device_manufacturer("manufacturers"),
-	device_model("device_types"),
+	//device_manufacturer("manufacturers"),
+	apple_product_line("apple_product_line"),
+	//device_model("device_types"),
 	language("languages"),
-	persona_name("personas"),
-	source("sources"),
 	geoip_continent("continents"),
 	geoip_country("countries"),
-	geoip_region("regions");
+	geoip_region("regions"),
+	//Always put personas and sources in the end
+	persona_name("personas"),
+	source("sources");
 	
 	private final String keyword;
 	

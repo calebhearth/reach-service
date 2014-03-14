@@ -27,6 +27,7 @@ import com.tapjoy.reach.hbase.HBaseWrapper;
 import com.tapjoy.reach.helper.Helper;
 import com.tapjoy.reach.params.KeyEnum;
 import com.tapjoy.reach.params.Personas;
+import com.tapjoy.reach.params.Source;
 import com.tapjoy.reach.service.ResponseModel;
 
 public class CountsHelper implements Helper {
@@ -50,7 +51,7 @@ public class CountsHelper implements Helper {
 					"application/json");
 			return model;
 		}
-		
+
 		params.remove(KeyEnum.getValue(KeyEnum.source));
 		Set<Entry<String, List<String>>> entries = params.entrySet();
 		List<Entry<String, List<String>>> entriesList = new ArrayList<Map.Entry<String, List<String>>>(
@@ -68,6 +69,7 @@ public class CountsHelper implements Helper {
 		int impCount = 0;
 		ResponseModel model = null;
 		for (String key : keyList) {
+			key = key.toUpperCase();
 			Result res = null;
 			try {
 				res = HBaseWrapper.getOneRecordInTable(key,
@@ -114,7 +116,7 @@ public class CountsHelper implements Helper {
 							res, CountsHbaseConstants.COLUMN_FAMILY,
 							personalColQualifier);
 					int personaUdids = calculateCounts(
-							String.valueOf(personaId), personaValue);
+							personaId+1, personaValue);
 					System.out.println("persona:" + persona + " #udids:"
 							+ personaUdids);
 					udidsCount += personaUdids;
@@ -126,7 +128,16 @@ public class CountsHelper implements Helper {
 					CountsHbaseConstants.COLUMN_FAMILY,
 					CountsHbaseConstants.SOURCE_COL_QUALIFIER);
 			for (String source : sources) {
-				int imps = calculateCounts(source, sourceValue);
+				Source s = null;
+				try {
+					s = Source.valueOf(source);
+				} catch (IllegalArgumentException ex) {
+					model = new ResponseModel("Invalid source",
+							HttpResponseStatus.BAD_REQUEST, "application/json");
+					return model;
+				}
+
+				int imps = calculateCounts(s.ordinal(), sourceValue);
 				System.out.println("source:" + source + " #imps:" + imps);
 				impCount += imps;
 			}
@@ -153,18 +164,12 @@ public class CountsHelper implements Helper {
 		return id;
 	}
 
-	private int calculateCounts(String key, String value) {
+	private int calculateCounts(int key, String value) {
 		String[] parts = value.split(":");
 		if (parts == null) {
 			return 0;
 		}
-		for (String p : parts) {
-			String[] splits = p.split("_");
-			if (splits[0].equalsIgnoreCase(key)) {
-				return Integer.parseInt(splits[1]);
-			}
-		}
-		return 0;
+		return Integer.parseInt(parts[key]);
 	}
 
 }

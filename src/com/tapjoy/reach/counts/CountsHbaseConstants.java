@@ -8,7 +8,7 @@ public class CountsHbaseConstants {
 	
 	public static final String UDID_COL_QUALIFIER = "id";
 	
-	public static final String SOURCE_COL_QUALIFIER = "source";
+	public static final String SOURCE_COL_QUALIFIER = "sr";
 	
 	public static final String PERSONA_COL_QUALIFIER_PREFIX = "s";
 	
