@@ -126,12 +126,8 @@ public class CountsHelper implements Helper {
 						"application/json");
 				return model;
 			}
-
-			if (res == null) {
-				continue;
-			}
 			
-			if(res.list() == null){
+			if(res == null || res.list() == null){
 				logger.error("No targeting found for key:"+key);
 				continue;
 			}
@@ -172,15 +168,7 @@ public class CountsHelper implements Helper {
 					CountsHbaseConstants.COLUMN_FAMILY,
 					CountsHbaseConstants.SOURCE_COL_QUALIFIER);
 			for (String source : sources) {
-				Source s = null;
-				try {
-					s = Source.valueOf(source);
-				} catch (IllegalArgumentException ex) {
-					model = new ResponseModel("Invalid source",
-							HttpResponseStatus.BAD_REQUEST, "application/json");
-					return model;
-				}
-
+				Source s = Source.fromString(source);
 				int imps = calculateCounts(s.ordinal(), sourceValue);
 				impCount += imps;
 			}
