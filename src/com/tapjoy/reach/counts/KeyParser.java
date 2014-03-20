@@ -62,10 +62,10 @@ public class KeyParser {
 				collectKeys(newKey, subList);
 			}
 			else{
-				int length = KeyEnum.values().length - 3;
-				if(rank < length){ //subtract personas, sources
+				int length = KeyEnum.values().length - 1;
+				if(rank < length-1){ //subtract personas
 					//append $
-					int diff = length - rank;
+					int diff = (length-1) - rank;
 					for(int i =1;i<= diff; i++ ){
 						newKey = (newKey.length() > 0 ? newKey+"-" : newKey) + "$";
 					}				

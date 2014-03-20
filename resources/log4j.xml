@@ -4,7 +4,7 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
 	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
-		<param name="Threshold" value="debug" />
+		<param name="Threshold" value="info" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" />
 		</layout>
@@ -12,13 +12,13 @@
 
 	<!-- FILE SETUP -->
 	<appender name="FileAppender" class="org.apache.log4j.RollingFileAppender">
-		<param name="Threshold" value="debug" />
+		<param name="Threshold" value="info" />
 		<param name="File" value="logs/ReachService.log" />
         	<param name="MaxFileSize"    value="32MB"/>
         	<param name="MaxBackupIndex" value="5000"/>
 
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%d [%t] %-5p %c - %m%n" />
+			<param name="ConversionPattern" value="%d %-5p %c - %m%n" />
 		</layout>
 	</appender>
 
@@ -26,8 +26,8 @@
 		<appender-ref ref="FileAppender" />
 	</appender>
 	
-	<logger name="com.tapjoy.opt" additivity="false">
-        <level value="debug" />
+	<logger name="com.tapjoy.reach" additivity="false">
+        <level value="info" />
         <appender-ref ref="FileAysncAppender" />
     </logger>
 	

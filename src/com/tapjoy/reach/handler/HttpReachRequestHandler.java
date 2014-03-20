@@ -23,6 +23,8 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.handler.codec.http.QueryStringDecoder;
 import org.jboss.netty.util.CharsetUtil;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.tapjoy.reach.config.OverallConfig;
 import com.tapjoy.reach.counts.CountsHelper;
 import com.tapjoy.reach.helper.Helper;
@@ -34,18 +36,89 @@ import com.tapjoy.reach.params.Language;
 import com.tapjoy.reach.params.Platform;
 import com.tapjoy.reach.params.Source;
 import com.tapjoy.reach.params.States;
+import com.tapjoy.reach.service.ErrorModel;
 import com.tapjoy.reach.service.ResponseModel;
 
 public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private Logger logger = Logger.getLogger(HttpReachRequestHandler.class);
+	
+	private static Gson gson = new GsonBuilder().create();
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
 
 		HttpRequest request = (HttpRequest) e.getMessage();
+		/*ChannelBuffer content = request.getContent();
+		System.out.println(content);
+		if(content.readable()){
+			System.out.println(content.toString(CharsetUtil.UTF_8));
+		}
+		HttpPostRequestDecoder decoder = null;
+		try {
+			decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), request);
+		} catch (ErrorDataDecoderException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (IncompatibleDataDecoderException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		try {
+			List<InterfaceHttpData> datas = decoder.getBodyHttpDatas("person");
+			System.out.println(datas);
+			for(InterfaceHttpData d:datas){
+				if(d instanceof MemoryAttribute){
+					MemoryAttribute m = (MemoryAttribute) d;
+					System.out.println(m.getValue());
+				}
+				System.out.println(d.getName());
+			}
+		} catch (NotEnoughDataDecoderException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+
+		  InterfaceHttpData data = null;
+		try {
+			data = decoder.getBodyHttpData("platform");
+		} catch (NotEnoughDataDecoderException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		  if (data.getHttpDataType() == HttpDataType.Attribute) {
+		     Attribute attribute = (Attribute) data;
+		     String value = null;
+			try {
+				value = attribute.getValue();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		     System.out.println("platform :" + value);
+		  }
+		  
+		  try {
+				data = decoder.getBodyHttpData("platform");
+			} catch (NotEnoughDataDecoderException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			  if (data.getHttpDataType() == HttpDataType.Attribute) {
+			     Attribute attribute = (Attribute) data;
+			     String value = null;
+				try {
+					value = attribute.getValue();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			     System.out.println("platform :" + value);
+			  }*/
 		String reqStr = request.getUri();
-		logger.info(reqStr);
+		if (!StringUtils.startsWithIgnoreCase(reqStr, "/health")) {
+			logger.info(reqStr);
+		}
 		if (StringUtils.startsWithIgnoreCase(reqStr, "/health")) {
 			reqStr = OverallConfig.healthCheck;
 		}
@@ -53,8 +126,10 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 		Map<String, List<String>> params = parseReq(reqStr);
 		if (params == null || params.size() == 0) {
 			logger.error("No params");
+			ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "No params");
+			String error = gson.toJson(errorModel);
 			ResponseModel responseModel = new ResponseModel(
-					"Invalid parameters", HttpResponseStatus.BAD_REQUEST,
+					error, HttpResponseStatus.BAD_REQUEST,
 					"application/json");
 			writeResponse(responseModel, e);
 			return;
@@ -64,24 +139,28 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 			KeyEnum keyEnum = KeyEnum.fromString(key);
 			if (keyEnum == null) {
 				logger.error("Invalid parameter:" + key);
+				ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid parameter:" + key);
+				String error = gson.toJson(errorModel);
 				ResponseModel responseModel = new ResponseModel(
-						"Invalid parameter:" + key,
+						error,
 						HttpResponseStatus.BAD_REQUEST, "application/json");
 				writeResponse(responseModel, e);
 				return;
 			}
 
 		}
-		
+
 		List<String> sources = params.get(KeyEnum.getValue(KeyEnum.source));
-		if(sources == null){
+		/*if (sources == null) {
 			logger.error("Source not specified");
+			ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Missing parameter:sources");
+			String error = gson.toJson(errorModel);
 			ResponseModel responseModel = new ResponseModel(
-					"Source not specified",
-					HttpResponseStatus.BAD_REQUEST, "application/json");
+					error, HttpResponseStatus.BAD_REQUEST,
+					"application/json");
 			writeResponse(responseModel, e);
 			return;
-		}
+		}*/
 
 		for (Entry<String, List<String>> entry : params.entrySet()) {
 			String key = entry.getKey();
@@ -158,9 +237,9 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 			}
 		}
-		
-		modifyLanguage(params);
-		modifyPlatform(params);
+
+		//modifyLanguage(params);
+		//modifyPlatform(params);
 
 		Helper countsHelper = new CountsHelper();
 		ResponseModel results = countsHelper.getResult(params);
@@ -169,29 +248,29 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 	private void modifyLanguage(Map<String, List<String>> params) {
 		List<String> vals = params.get(KeyEnum.language.toString());
-		if(vals == null){
+		if (vals == null) {
 			return;
 		}
-		for(int i = 0;i<vals.size();i++){
+		for (int i = 0; i < vals.size(); i++) {
 			Language enumName = Language.fromString(vals.get(i));
 			vals.set(i, enumName.name().toUpperCase());
 		}
-		
+
 	}
 
 	private void modifyPlatform(Map<String, List<String>> params) {
 		List<String> vals = params.get(KeyEnum.platform.toString());
-		if(vals == null){
+		if (vals == null) {
 			return;
 		}
-		for(int i = 0;i<vals.size();i++){
+		for (int i = 0; i < vals.size(); i++) {
 			Platform enumName = Platform.fromString(vals.get(i));
-			if(enumName.equals(Platform.IOS)){
+			if (enumName.equals(Platform.IOS)) {
 				vals.set(i, "IPHONE");
 			}
-			
+
 		}
-		
+
 	}
 
 	private boolean verifyDeviceOsVersion(List<String> values) {
@@ -261,10 +340,12 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 	}
 
 	private ResponseModel invalidParamResponse(KeyEnum keyEnum) {
-		logger.error("Invalid value for parameter:"+ KeyEnum.getValue(keyEnum));
-		ResponseModel responseModel = new ResponseModel("Invalid value for parameter:"
-				+ KeyEnum.getValue(keyEnum), HttpResponseStatus.BAD_REQUEST,
-				"application/json");
+		logger.error("Invalid value for parameter:" + KeyEnum.getValue(keyEnum));
+		ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid value for parameter:" + KeyEnum.getValue(keyEnum));
+		String error = gson.toJson(errorModel);
+		ResponseModel responseModel = new ResponseModel(
+				 error,
+				HttpResponseStatus.BAD_REQUEST, "application/json");
 		return responseModel;
 	}
 
@@ -286,7 +367,7 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 		response.setContent(ChannelBuffers.copiedBuffer(
 				responseModel.getResponse(), CharsetUtil.UTF_8));
 		response.setHeader(HttpHeaders.Names.CONTENT_TYPE,
-				"text/plain; charset=UTF-8");
+				responseModel.getContentType());
 		response.setHeader(HttpHeaders.Names.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
 		response.setHeader(HttpHeaders.Names.CONTENT_LENGTH, response
 				.getContent().readableBytes());

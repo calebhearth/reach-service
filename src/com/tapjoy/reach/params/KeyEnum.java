@@ -2,6 +2,7 @@ package com.tapjoy.reach.params;
 
 public enum KeyEnum {
 	//device_size("device size"),
+	source("sources"),
 	language("language"),
 	apple_product_line("apple_product_line"),
 	platform("platform"),
@@ -12,8 +13,7 @@ public enum KeyEnum {
 	geoip_country("geoip_country"),
 	geoip_region("regions"),
 	//Always put personas and sources in the end
-	persona_name("personas"),
-	source("sources");
+	persona_name("personas");
 	
 	private final String keyword;
 	
