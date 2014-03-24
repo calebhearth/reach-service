@@ -124,9 +124,9 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 		}
 
 		Map<String, List<String>> params = parseReq(reqStr);
-		if (params == null || params.size() == 0) {
-			logger.error("No params");
-			ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "No params");
+		if (params == null) {
+			logger.error("Error while parsing params");
+			ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid params");
 			String error = gson.toJson(errorModel);
 			ResponseModel responseModel = new ResponseModel(
 					error, HttpResponseStatus.BAD_REQUEST,
@@ -150,18 +150,6 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 		}
 
-		List<String> sources = params.get(KeyEnum.getValue(KeyEnum.source));
-		/*if (sources == null) {
-			logger.error("Source not specified");
-			ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Missing parameter:sources");
-			String error = gson.toJson(errorModel);
-			ResponseModel responseModel = new ResponseModel(
-					error, HttpResponseStatus.BAD_REQUEST,
-					"application/json");
-			writeResponse(responseModel, e);
-			return;
-		}*/
-
 		for (Entry<String, List<String>> entry : params.entrySet()) {
 			String key = entry.getKey();
 			KeyEnum keyEnum = KeyEnum.fromString(key);
@@ -169,77 +157,96 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 			boolean check = false;
 			switch (keyEnum) {
 			case apple_product_line:
-				check = verifyAppleProductLine(values);
-				if (!check) {
-					writeResponse(invalidParamResponse(keyEnum), e);
-					return;
+				for (String v : values) {
+					check = verifyAppleProductLine(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
 				}
+
 				break;
 			case device_os_version:
-				check = verifyDeviceOsVersion(values);
-				if (!check) {
-					writeResponse(invalidParamResponse(keyEnum), e);
-					return;
+				for (String v : values) {
+					check = verifyDeviceOsVersion(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
 				}
 				break;
 			case geoip_continent:
-				check = verifyContinent(values);
-				if (!check) {
-					writeResponse(invalidParamResponse(keyEnum), e);
-					return;
+				for (String v : values) {
+					check = verifyContinent(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
 				}
 				break;
 			case geoip_country:
-				check = verifyCountry(values);
-				if (!check) {
-					writeResponse(invalidParamResponse(keyEnum), e);
-					return;
+				for (String v : values) {
+					check = verifyCountry(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
 				}
 				break;
 			case geoip_region:
-				check = verifyRegion(values);
-				if (!check) {
-					writeResponse(invalidParamResponse(keyEnum), e);
-					return;
+				for (String v : values) {
+					check = verifyRegion(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
 				}
 				break;
 			case language:
-				check = verifyLanguage(values);
-				if (!check) {
-					writeResponse(invalidParamResponse(keyEnum), e);
-					return;
+				for (String v : values) {
+					check = verifyLanguage(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
 				}
 				break;
 			case persona_name:
-				check = verifyPersonaName(values);
-				if (!check) {
-					writeResponse(invalidParamResponse(keyEnum), e);
-					return;
+				for (String v : values) {
+					check = verifyPersonaName(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
 				}
 				break;
 			case platform:
-				check = verifyPlatform(values);
-				if (!check) {
-					writeResponse(invalidParamResponse(keyEnum), e);
-					return;
+				for (String v : values) {
+					check = verifyPlatform(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
 				}
 				break;
 			case source:
-				check = verifySource(values);
-				if (!check) {
-					writeResponse(invalidParamResponse(keyEnum), e);
-					return;
+				for (String v : values) {
+					check = verifySource(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
 				}
 				break;
 			default:
-				writeResponse(invalidParamResponse(keyEnum), e);
+				writeResponse(invalidParamResponse(keyEnum, ""), e);
 				return;
 
 			}
 		}
 
-		//modifyLanguage(params);
-		//modifyPlatform(params);
+		// modifyLanguage(params);
+		// modifyPlatform(params);
 
 		Helper countsHelper = new CountsHelper();
 		ResponseModel results = countsHelper.getResult(params);
@@ -273,89 +280,78 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 	}
 
-	private boolean verifyDeviceOsVersion(List<String> values) {
+	private boolean verifyDeviceOsVersion(String v) {
 		return true;
 	}
 
-	private boolean verifyContinent(List<String> values) {
-		for (String v : values) {
-			if (!Continents.hasValue(v)) {
-				return false;
-			}
+	private boolean verifyContinent(String v) {
+		if (!Continents.hasValue(v)) {
+			return false;
 		}
 		return true;
 	}
 
-	private boolean verifyCountry(List<String> values) {
-		for (String v : values) {
-			if (!Countries.hasValue(v)) {
-				return false;
-			}
+	private boolean verifyCountry(String v) {
+		if (!Countries.hasValue(v)) {
+			return false;
 		}
 		return true;
 	}
 
-	private boolean verifyRegion(List<String> values) {
-		for (String v : values) {
-			if (!States.hasValue(v)) {
-				return false;
-			}
+	private boolean verifyRegion(String v) {
+		if (!States.hasValue(v)) {
+			return false;
 		}
 		return true;
 	}
 
-	private boolean verifyLanguage(List<String> values) {
-		for (String v : values) {
-			Language enumName = Language.fromString(v);
-			if (enumName == null) {
-				return false;
-			}
+	private boolean verifyLanguage(String v) {
+		Language enumName = Language.fromString(v);
+		if (enumName == null) {
+			return false;
 		}
 		return true;
 	}
 
-	private boolean verifyPersonaName(List<String> values) {
+	private boolean verifyPersonaName(String v) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
-	private boolean verifyPlatform(List<String> values) {
-		for (String v : values) {
-			Platform enumName = Platform.fromString(v);
-			if (enumName == null) {
-				return false;
-			}
+	private boolean verifyPlatform(String v) {
+		Platform enumName = Platform.fromString(v);
+		if (enumName == null) {
+			return false;
 		}
 		return true;
 	}
 
-	private boolean verifySource(List<String> values) {
-		for (String v : values) {
-			Source enumName = Source.fromString(v);
-			if (enumName == null) {
-				return false;
-			}
+	private boolean verifySource(String v) {
+		Source enumName = Source.fromString(v);
+		if (enumName == null) {
+			return false;
 		}
 		return true;
 	}
 
-	private ResponseModel invalidParamResponse(KeyEnum keyEnum) {
+	private ResponseModel invalidParamResponse(KeyEnum keyEnum, String value) {
 		logger.error("Invalid value for parameter:" + KeyEnum.getValue(keyEnum));
-		ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid value for parameter:" + KeyEnum.getValue(keyEnum));
+		ErrorModel errorModel = new ErrorModel(
+				HttpResponseStatus.BAD_REQUEST.getCode(),
+				"Invalid value for " + KeyEnum.getValue(keyEnum)
+						+ " :" + value);
 		String error = gson.toJson(errorModel);
-		ResponseModel responseModel = new ResponseModel(
-				 error,
+		ResponseModel responseModel = new ResponseModel(error,
 				HttpResponseStatus.BAD_REQUEST, "application/json");
 		return responseModel;
 	}
 
-	private boolean verifyAppleProductLine(List<String> values) {
-		for (String v : values) {
-			AppleProductLine enumName = AppleProductLine.fromString(v);
-			if (enumName == null) {
-				return false;
-			}
+	private boolean verifyAppleProductLine(String v) {
+		AppleProductLine enumName = AppleProductLine.fromString(v);
+		if (enumName == null) {
+			return false;
 		}
+
 		return true;
 	}
 

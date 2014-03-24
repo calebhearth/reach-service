@@ -9,25 +9,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.xml.transform.stream.StreamResult;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.log4j.Logger;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.tapjoy.reach.config.OverallConfig;
 import com.tapjoy.reach.hbase.HBaseWrapper;
 import com.tapjoy.reach.helper.Helper;
 import com.tapjoy.reach.params.KeyEnum;
 import com.tapjoy.reach.params.Personas;
-import com.tapjoy.reach.params.Source;
 import com.tapjoy.reach.service.ErrorModel;
 import com.tapjoy.reach.service.ResponseModel;
 
@@ -54,18 +46,6 @@ public class CountsHelper implements Helper {
 					.getValue(KeyEnum.persona_name));
 			params.remove(KeyEnum.getValue(KeyEnum.persona_name));
 
-			List<String> sources = params.get(KeyEnum.getValue(KeyEnum.source));
-		/*	if (sources == null || sources.size() == 0) {
-				logger.error("No source in request");
-				errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Missing parameters: sources missing");
-				String error = gson.toJson(errorModel);
-				ResponseModel model = new ResponseModel(error,
-						HttpResponseStatus.BAD_REQUEST,
-						"application/json");
-				return model;
-			}
-			//params.remove(KeyEnum.getValue(KeyEnum.source));*/
-
 			Set<Entry<String, List<String>>> entries = params.entrySet();
 			List<Entry<String, List<String>>> entriesList = new ArrayList<Map.Entry<String, List<String>>>(
 					entries);
@@ -80,10 +60,10 @@ public class CountsHelper implements Helper {
 				keyList.add(key);
 			} else {
 				Collections.sort(entriesList, new KeyComparator());
-				keyList = new KeyParser().collectKeys("", entriesList);
+				keyList = new KeyParser().collectKeys("", entriesList,0);
 			}
 
-			ResponseModel model = getHBaseResults(keyList, personas, sources);
+			ResponseModel model = getHBaseResults(keyList, personas);
 			return model;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -120,7 +100,7 @@ public class CountsHelper implements Helper {
 	}
 
 	private ResponseModel getHBaseResults(List<String> keyList,
-			List<String> personas, List<String> sources) {
+			List<String> personas) {
 		int udidsCount = 0;
 		int impCount = 0;
 		ResponseModel model = null;
@@ -129,9 +109,9 @@ public class CountsHelper implements Helper {
 			String src = key.split("-")[0];
 			src = src.toLowerCase();
 			key = src+key.substring(key.indexOf('-'));
-			Result res = null;
+			Result impRes = null;
 			try {
-				res = HBaseWrapper.getOneRecordInTable(key,
+				impRes = HBaseWrapper.getOneRecordInTable(key,
 						CountsHbaseConstants.COUNTS_TABLE,
 						CountsHbaseConstants.TOKEN);
 			} catch (ClassNotFoundException | SQLException
@@ -145,124 +125,93 @@ public class CountsHelper implements Helper {
 				return model;
 			}
 
-			if (res == null || res.list() == null) {
+			if (impRes == null || impRes.list() == null) {
 				logger.error("No targeting found for key:" + key);
-				continue;
+				ErrorModel errorModel = new ErrorModel(HttpResponseStatus.INTERNAL_SERVER_ERROR.getCode(), "No targeting found, maybe invalid parameters or targeting doesn't exist");
+				String error = gson.toJson(errorModel);
+				model = new ResponseModel(error,
+						HttpResponseStatus.INTERNAL_SERVER_ERROR,
+						"application/json");
+				return model;
 			}
 			
-			if(key.charAt(0) == '$' &&(personas == null || personas.size() == 0) ){
-				String udidString = HBaseWrapper.getHBaseResultToString(res,
-						CountsHbaseConstants.COLUMN_FAMILY,
-						CountsHbaseConstants.DISTINCT_UDID_COL_QUALIFIER);
-				if (StringUtils.isNotBlank(udidString)) {
-					udidsCount += Integer.parseInt(udidString);
-				}
-				
-				String impString = HBaseWrapper.getHBaseResultToString(res,
-						CountsHbaseConstants.COLUMN_FAMILY,
-						CountsHbaseConstants.SOURCE_COL_QUALIFIER);
-				if (StringUtils.isNotBlank(impString)) {
-					impCount += Integer.parseInt(impString);
-				}
-			}
-			
-			else if(key.charAt(0) != '$' &&(personas == null || personas.size() == 0)){
-				String udidString = HBaseWrapper.getHBaseResultToString(res,
-						CountsHbaseConstants.COLUMN_FAMILY,
-						CountsHbaseConstants.UDID_COL_QUALIFIER);
-				if (StringUtils.isNotBlank(udidString)) {
-					udidsCount += Integer.parseInt(udidString);
-				}
-				
-				String impString = HBaseWrapper.getHBaseResultToString(res,
-						CountsHbaseConstants.COLUMN_FAMILY,
-						CountsHbaseConstants.SOURCE_COL_QUALIFIER);
-				if (StringUtils.isNotBlank(impString)) {
-					impCount += Integer.parseInt(impString);
-				}
-			}
-			
-			else if(key.charAt(0) == '$' && personas.size() > 0){
-				CountsModel countsModel = getCount(personas, false, res);
-				if(countsModel == null){
-					ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid persona value");
-					String error = gson.toJson(errorModel);
-					model = new ResponseModel(error,
-							HttpResponseStatus.BAD_REQUEST,
-							"application/json");
-					return model;
-				}
-				udidsCount += countsModel.getUdids_count();
-				impCount += countsModel.getImpressions_count();
-				
-			}
-			
-			else if(key.charAt(0) != '$' && personas.size() > 0){
-				CountsModel countsModel = getCount(personas, true, res);
-				if(countsModel == null){
-					ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid persona value");
-					String error = gson.toJson(errorModel);
-					model = new ResponseModel(error,
-							HttpResponseStatus.BAD_REQUEST,
-							"application/json");
-					return model;
-				}
-				udidsCount += countsModel.getUdids_count();
-				impCount += countsModel.getImpressions_count();
+			Result udidRes = null;
+			String newKey = "$"+key.substring(key.indexOf('-'));
+			try {
+				udidRes = HBaseWrapper.getOneRecordInTable(newKey,
+						CountsHbaseConstants.COUNTS_TABLE,
+						CountsHbaseConstants.TOKEN);
+			} catch (ClassNotFoundException | SQLException
+					| InterruptedException e1) {
+				logger.error(e1);
+				ErrorModel errorModel = new ErrorModel(HttpResponseStatus.INTERNAL_SERVER_ERROR.getCode(), "HBase error");
+				String error = gson.toJson(errorModel);
+				model = new ResponseModel(error,
+						HttpResponseStatus.INTERNAL_SERVER_ERROR,
+						"application/json");
+				return model;
 			}
 
-			/*if (personas == null || personas.size() == 0) {
-				String udidString = HBaseWrapper.getHBaseResultToString(res,
-						CountsHbaseConstants.COLUMN_FAMILY,
-						CountsHbaseConstants.UDID_COL_QUALIFIER);
-				if (StringUtils.isNotBlank(udidString)) {
-					udidsCount += Integer.parseInt(udidString);
-				}
-
+			if (udidRes == null || udidRes.list() == null) {
+				logger.error("No targeting found for key:" + key);
+				ErrorModel errorModel = new ErrorModel(HttpResponseStatus.INTERNAL_SERVER_ERROR.getCode(), "No targeting found, maybe invalid parameters or targeting doesn't exist");
+				String error = gson.toJson(errorModel);
+				model = new ResponseModel(error,
+						HttpResponseStatus.INTERNAL_SERVER_ERROR,
+						"application/json");
+				return model;
 			}
-
-			else {
-				for (String persona : personas) {
+			
+			if(personas != null && personas.size() > 0){
+				for(String persona:personas){
 					int personaId = getPersonaId(persona);
 					if (personaId == 0) {
-						ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid persona value");
-						String error = gson.toJson(errorModel);
-						model = new ResponseModel(error,
-								HttpResponseStatus.BAD_REQUEST,
-								"application/json");
-						return model;
+						return null;
 					}
 					int segmentId = (int) Math.ceil(personaId / 10d);
-					String personalColQualifier = CountsHbaseConstants.PERSONA_COL_QUALIFIER_PREFIX
+					String udidColQualifier = "ds"
 							+ segmentId;
-					String personaValue = HBaseWrapper.getHBaseResultToString(
-							res, CountsHbaseConstants.COLUMN_FAMILY,
-							personalColQualifier);
-					int personaUdids = calculateCounts((personaId % 10) - 1,
-							personaValue);
-					udidsCount += personaUdids;
-
+					String udidValue = HBaseWrapper.getHBaseResultToString(
+							udidRes, CountsHbaseConstants.COLUMN_FAMILY,
+							udidColQualifier);
+					String val = calculateCounts((personaId % 10) - 1,
+							udidValue);
+					if (StringUtils.isNotBlank(val)) {
+						udidsCount += Integer.parseInt(val);
+					}
+					
+					String impColQualifier = "s"
+							+ segmentId;
+					String impValue = HBaseWrapper.getHBaseResultToString(
+							impRes, CountsHbaseConstants.COLUMN_FAMILY,
+							impColQualifier);
+					val = calculateCounts((personaId % 10) - 1,
+							impValue);
+					String[] splits = val.split(",");
+					impCount += Integer.parseInt(splits[1]);					
 				}
+				
 			}
-
-			String sourceValue = HBaseWrapper.getHBaseResultToString(res,
-					CountsHbaseConstants.COLUMN_FAMILY,
-					CountsHbaseConstants.SOURCE_COL_QUALIFIER);
-			for (String source : sources) {
-				Source s = Source.fromString(source);
-				int imps = calculateCounts(s.ordinal(), sourceValue);
-				impCount += imps;
-			}*/
-
-			/*
-			 * for (KeyValue rawVal : res.raw()) { byte[] bytes =
-			 * rawVal.getValue(); String val = Bytes.toString(bytes); if (val ==
-			 * null || val.equals("null")) { continue; }
-			 * 
-			 * System.out.println(val); String[] counts = val.split(":");
-			 * udidsCount += Integer.parseInt(counts[0]); impCount +=
-			 * Integer.parseInt(counts[1]); }
-			 */
+			
+			else{
+				String udidColQualifier = "did";
+				String udidValue = HBaseWrapper.getHBaseResultToString(
+						udidRes, CountsHbaseConstants.COLUMN_FAMILY,
+						udidColQualifier);
+				if (StringUtils.isNotBlank(udidValue)) {
+					udidsCount += Integer.parseInt(udidValue);
+				}
+				
+				String impColQualifier = "sr";
+				String impValue = HBaseWrapper.getHBaseResultToString(
+						impRes, CountsHbaseConstants.COLUMN_FAMILY,
+						impColQualifier);
+				if (StringUtils.isNotBlank(impValue)) {
+					impCount += Integer.parseInt(impValue);
+				}
+				
+			}
+			
 		}
 		CountsModel countsModel = new CountsModel(udidsCount, impCount);
 		String json = gson.toJson(countsModel);
@@ -282,41 +231,6 @@ public class CountsHelper implements Helper {
 			return "";
 		}
 		return parts[key];
-	}
-	
-	private CountsModel getCount(List<String> personas, boolean isSource, Result res){
-		int udidsCount = 0, impCount = 0;
-		for(String p:personas){
-			int personaId = getPersonaId(p);
-			if (personaId == 0) {
-				return null;
-			}
-			int segmentId = (int) Math.ceil(personaId / 10d);
-			String personalColQualifier = CountsHbaseConstants.PERSONA_COL_QUALIFIER_PREFIX
-					+ segmentId;
-			String personaValue = HBaseWrapper.getHBaseResultToString(
-					res, CountsHbaseConstants.COLUMN_FAMILY,
-					personalColQualifier);
-			String val = calculateCounts((personaId % 10) - 1,
-					personaValue);
-			String[] splits = val.split(",");
-			impCount += Integer.parseInt(splits[1]);
-			if(isSource){
-				udidsCount += Integer.parseInt(splits[0]);
-			}
-			else{
-				String sourceColQualifier = CountsHbaseConstants.DISTINCT_SOURCE_QUALIFIER_PREFIX
-						+ segmentId;
-				personaValue = HBaseWrapper.getHBaseResultToString(
-						res, CountsHbaseConstants.COLUMN_FAMILY,
-						sourceColQualifier);
-				 val = calculateCounts((personaId % 10) - 1,
-						personaValue);
-				 udidsCount += Integer.parseInt(val);
-			}
-			
-		}
-		return new CountsModel(udidsCount, impCount);
 	}
 
 }
