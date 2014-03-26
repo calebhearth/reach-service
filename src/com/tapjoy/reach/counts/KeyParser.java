@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.tapjoy.reach.params.KeyEnum;
 
 public class KeyParser {
@@ -57,6 +59,13 @@ public class KeyParser {
 		
 		List<String> value = entry.getValue();
 		for (String v : value) {
+			if(keyEnum.equals(KeyEnum.device_os_version)){
+				if(StringUtils.containsIgnoreCase(key, "ios")){
+					Double d = Double.parseDouble(v);
+					int osv = d.intValue();
+					v = Integer.toString(osv);
+				}
+			}
 			String newKey = (key.length() > 0 ? key+"-" : key) + v;
 			List<Entry<String, List<String>>> subList = entries.subList(1,
 					entries.size());

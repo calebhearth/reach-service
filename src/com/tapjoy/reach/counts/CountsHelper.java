@@ -106,12 +106,9 @@ public class CountsHelper implements Helper {
 		ResponseModel model = null;
 		for (String key : keyList) {
 			key = key.toUpperCase();
-			String src = key.split("-")[0];
-			src = src.toLowerCase();
-			key = src+key.substring(key.indexOf('-'));
-			Result impRes = null;
+			Result res = null;
 			try {
-				impRes = HBaseWrapper.getOneRecordInTable(key,
+				res = HBaseWrapper.getOneRecordInTable(key,
 						CountsHbaseConstants.COUNTS_TABLE,
 						CountsHbaseConstants.TOKEN);
 			} catch (ClassNotFoundException | SQLException
@@ -125,41 +122,9 @@ public class CountsHelper implements Helper {
 				return model;
 			}
 
-			if (impRes == null || impRes.list() == null) {
+			if (res == null || res.list() == null) {
 				logger.error("No targeting found for key:" + key);
-				ErrorModel errorModel = new ErrorModel(HttpResponseStatus.INTERNAL_SERVER_ERROR.getCode(), "No targeting found, maybe invalid parameters or targeting doesn't exist");
-				String error = gson.toJson(errorModel);
-				model = new ResponseModel(error,
-						HttpResponseStatus.INTERNAL_SERVER_ERROR,
-						"application/json");
-				return model;
-			}
-			
-			Result udidRes = null;
-			String newKey = "$"+key.substring(key.indexOf('-'));
-			try {
-				udidRes = HBaseWrapper.getOneRecordInTable(newKey,
-						CountsHbaseConstants.COUNTS_TABLE,
-						CountsHbaseConstants.TOKEN);
-			} catch (ClassNotFoundException | SQLException
-					| InterruptedException e1) {
-				logger.error(e1);
-				ErrorModel errorModel = new ErrorModel(HttpResponseStatus.INTERNAL_SERVER_ERROR.getCode(), "HBase error");
-				String error = gson.toJson(errorModel);
-				model = new ResponseModel(error,
-						HttpResponseStatus.INTERNAL_SERVER_ERROR,
-						"application/json");
-				return model;
-			}
-
-			if (udidRes == null || udidRes.list() == null) {
-				logger.error("No targeting found for key:" + key);
-				ErrorModel errorModel = new ErrorModel(HttpResponseStatus.INTERNAL_SERVER_ERROR.getCode(), "No targeting found, maybe invalid parameters or targeting doesn't exist");
-				String error = gson.toJson(errorModel);
-				model = new ResponseModel(error,
-						HttpResponseStatus.INTERNAL_SERVER_ERROR,
-						"application/json");
-				return model;
+				continue;
 			}
 			
 			if(personas != null && personas.size() > 0){
@@ -169,34 +134,25 @@ public class CountsHelper implements Helper {
 						return null;
 					}
 					int segmentId = (int) Math.ceil(personaId / 10d);
-					String udidColQualifier = "ds"
-							+ segmentId;
-					String udidValue = HBaseWrapper.getHBaseResultToString(
-							udidRes, CountsHbaseConstants.COLUMN_FAMILY,
-							udidColQualifier);
-					String val = calculateCounts((personaId % 10) - 1,
-							udidValue);
-					if (StringUtils.isNotBlank(val)) {
-						udidsCount += Integer.parseInt(val);
-					}
 					
-					String impColQualifier = "s"
+					String colQualifier = "s"
 							+ segmentId;
-					String impValue = HBaseWrapper.getHBaseResultToString(
-							impRes, CountsHbaseConstants.COLUMN_FAMILY,
-							impColQualifier);
-					val = calculateCounts((personaId % 10) - 1,
-							impValue);
+					String value = HBaseWrapper.getHBaseResultToString(
+							res, CountsHbaseConstants.COLUMN_FAMILY,
+							colQualifier);
+					String val = calculateCounts((personaId % 10) - 1,
+							value);
 					String[] splits = val.split(",");
+					udidsCount += Integer.parseInt(splits[0]);
 					impCount += Integer.parseInt(splits[1]);					
 				}
 				
 			}
 			
 			else{
-				String udidColQualifier = "did";
+				String udidColQualifier = "id";
 				String udidValue = HBaseWrapper.getHBaseResultToString(
-						udidRes, CountsHbaseConstants.COLUMN_FAMILY,
+						res, CountsHbaseConstants.COLUMN_FAMILY,
 						udidColQualifier);
 				if (StringUtils.isNotBlank(udidValue)) {
 					udidsCount += Integer.parseInt(udidValue);
@@ -204,7 +160,7 @@ public class CountsHelper implements Helper {
 				
 				String impColQualifier = "sr";
 				String impValue = HBaseWrapper.getHBaseResultToString(
-						impRes, CountsHbaseConstants.COLUMN_FAMILY,
+						res, CountsHbaseConstants.COLUMN_FAMILY,
 						impColQualifier);
 				if (StringUtils.isNotBlank(impValue)) {
 					impCount += Integer.parseInt(impValue);

@@ -1,5 +1,6 @@
 package com.tapjoy.reach.handler;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
@@ -16,6 +18,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
+import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
@@ -25,6 +28,8 @@ import org.jboss.netty.util.CharsetUtil;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.tapjoy.reach.config.OverallConfig;
 import com.tapjoy.reach.counts.CountsHelper;
 import com.tapjoy.reach.helper.Helper;
@@ -49,81 +54,25 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
 
 		HttpRequest request = (HttpRequest) e.getMessage();
-		/*ChannelBuffer content = request.getContent();
-		System.out.println(content);
-		if(content.readable()){
-			System.out.println(content.toString(CharsetUtil.UTF_8));
-		}
-		HttpPostRequestDecoder decoder = null;
-		try {
-			decoder = new HttpPostRequestDecoder(new DefaultHttpDataFactory(false), request);
-		} catch (ErrorDataDecoderException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (IncompatibleDataDecoderException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		try {
-			List<InterfaceHttpData> datas = decoder.getBodyHttpDatas("person");
-			System.out.println(datas);
-			for(InterfaceHttpData d:datas){
-				if(d instanceof MemoryAttribute){
-					MemoryAttribute m = (MemoryAttribute) d;
-					System.out.println(m.getValue());
-				}
-				System.out.println(d.getName());
-			}
-		} catch (NotEnoughDataDecoderException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-
-		  InterfaceHttpData data = null;
-		try {
-			data = decoder.getBodyHttpData("platform");
-		} catch (NotEnoughDataDecoderException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		  if (data.getHttpDataType() == HttpDataType.Attribute) {
-		     Attribute attribute = (Attribute) data;
-		     String value = null;
-			try {
-				value = attribute.getValue();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		     System.out.println("platform :" + value);
-		  }
-		  
-		  try {
-				data = decoder.getBodyHttpData("platform");
-			} catch (NotEnoughDataDecoderException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			  if (data.getHttpDataType() == HttpDataType.Attribute) {
-			     Attribute attribute = (Attribute) data;
-			     String value = null;
-				try {
-					value = attribute.getValue();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			     System.out.println("platform :" + value);
-			  }*/
+		Map<String, List<String>> params = null;
 		String reqStr = request.getUri();
+		
+		if(request.getMethod() == HttpMethod.GET){			
+			params = parseGetRequestParams(reqStr);
+		}
+		else if(request.getMethod() == HttpMethod.POST){
+			params = parsePostRequestParams(request);
+		}
+		
 		if (!StringUtils.startsWithIgnoreCase(reqStr, "/health")) {
 			logger.info(reqStr);
 		}
 		if (StringUtils.startsWithIgnoreCase(reqStr, "/health")) {
 			reqStr = OverallConfig.healthCheck;
 		}
+		
 
-		Map<String, List<String>> params = parseReq(reqStr);
+		
 		if (params == null) {
 			logger.error("Error while parsing params");
 			ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid params");
@@ -253,6 +202,26 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 		writeResponse(results, e);
 	}
 
+	
+	private Map<String, List<String>> parsePostRequestParams(HttpRequest request) {
+		ChannelBuffer content = request.getContent();
+		if (!content.readable()) {
+			return null;
+		}
+		System.out.println(content.toString(CharsetUtil.UTF_8));
+		String json = content.toString(CharsetUtil.UTF_8);
+		Type mapType = new TypeToken<Map<String, List<String>>>() {
+		}.getType();
+		try {
+			Map<String, List<String>> specs = new Gson()
+					.fromJson(json, mapType);
+			return specs;
+		} catch (JsonSyntaxException ex) {
+			logger.error(ex);
+			return null;
+		}
+	}
+
 	private void modifyLanguage(Map<String, List<String>> params) {
 		List<String> vals = params.get(KeyEnum.language.toString());
 		if (vals == null) {
@@ -281,6 +250,11 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 	}
 
 	private boolean verifyDeviceOsVersion(String v) {
+		try{
+			Double d = Double.parseDouble(v);
+		}catch(NumberFormatException ex){
+			return false;
+		}
 		return true;
 	}
 
@@ -381,7 +355,7 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 	}
 
-	private Map<String, List<String>> parseReq(String reqStr) {
+	private Map<String, List<String>> parseGetRequestParams(String reqStr) {
 		// Parse the request parameters
 		QueryStringDecoder queryStringDecoder = new QueryStringDecoder(reqStr);
 		Map<String, List<String>> params = queryStringDecoder.getParameters();
