@@ -320,9 +320,9 @@ public class HBaseWrapper {
             int token) throws ClassNotFoundException,
             SQLException, InterruptedException { 
         byte[] rowKey = null;
-
+        HTableInterface table = null;
         try {
-        	HTableInterface table = htpool.getTable(tableName);
+        	table = htpool.getTable(tableName);
             rowKey = HBaseUtil.constructKey(token, key);
             Get get = new Get(rowKey);
             Result rs = table.get(get);
@@ -330,6 +330,14 @@ public class HBaseWrapper {
         } catch (Exception e) {
         	e.printStackTrace();
         	logger.error(e);
+        }finally{
+        	if(table != null){
+        		try {
+					table.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+        	}
         }
         return null;
     }
