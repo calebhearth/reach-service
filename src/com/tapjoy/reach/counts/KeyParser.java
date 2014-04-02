@@ -1,53 +1,31 @@
 package com.tapjoy.reach.counts;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.tapjoy.reach.params.AppleProductLine;
 import com.tapjoy.reach.params.KeyEnum;
+import com.tapjoy.reach.params.Platform;
 
 public class KeyParser {
 
-	private List<String> keyList;
-
+	private Set<String> keyList;
+	
 	public KeyParser() {
-		keyList = new ArrayList<String>();
+		keyList = new TreeSet<String>();
 	}
 
-	public List<String> collectKeys(String key,
+	public Set<String> collectKeys(String key,
 			List<Entry<String, List<String>>> entries,int presentPos) {
-		/*if (entries.size() == 1) {
-			Entry<String, List<String>> entry = entries.get(0);
-			List<String> value = entry.getValue();
-			int numKeys;
-			
-			if(key.length() == 0){
-				numKeys = 0;
-			}
-			else{
-				numKeys = key.split("-").length;
-			}
-			
-			
-			for (String v : value) {
-				String newKey = key + (key.length() > 0 ? "-" + v : v);
-				keyList.add(newKey);
-			}
-			return keyList;
-		}*/
 
 		Entry<String, List<String>> entry = entries.get(0);
 		String param = entry.getKey();
 		KeyEnum keyEnum = KeyEnum.fromString(param);
 		int rank = keyEnum.ordinal();
-		//int presentPos = 0;
-		
-	/*	if (key.length() > 0) {
-			String[] keyParts = key.split("-");
-			presentPos = keyParts.length;
-		}*/
 		
 		if (rank > presentPos) {
 			for (int i = 1; i <= rank - presentPos; i++) {
@@ -66,7 +44,14 @@ public class KeyParser {
 					v = Integer.toString(osv);
 				}
 			}
+			
 			String newKey = (key.length() > 0 ? key+"-" : key) + v;
+			if(keyEnum.equals(KeyEnum.platform)){
+				if(v.equalsIgnoreCase(Platform.ANDROID.name()) || v.equalsIgnoreCase(Platform.WINDOWS.name())){
+					newKey = removeAppleProductLine(newKey);
+				}
+			}
+			newKey = newKey.toUpperCase();
 			List<Entry<String, List<String>>> subList = entries.subList(1,
 					entries.size());
 			if(subList.size() > 0){
@@ -86,6 +71,16 @@ public class KeyParser {
 		}
 
 		return keyList;
+	}
+
+	private String removeAppleProductLine(String newKey) {
+		newKey = newKey.toUpperCase();
+		for(AppleProductLine a : AppleProductLine.values()){
+			newKey = StringUtils.replace(newKey, a.name().toUpperCase(), "$");
+		}
+		
+		return newKey;
+		
 	}
 
 }

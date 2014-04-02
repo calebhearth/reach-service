@@ -29,6 +29,7 @@
 	<logger name="com.tapjoy.reach" additivity="false">
         <level value="info" />
         <appender-ref ref="FileAysncAppender" />
+        <appender-ref ref="ConsoleAppender" />
     </logger>
 	
 	<root>

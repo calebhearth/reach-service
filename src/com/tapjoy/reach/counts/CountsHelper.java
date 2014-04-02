@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.hbase.client.Result;
@@ -50,13 +51,13 @@ public class CountsHelper implements Helper {
 			List<Entry<String, List<String>>> entriesList = new ArrayList<Map.Entry<String, List<String>>>(
 					entries);
 
-			List<String> keyList;
+			Set<String> keyList;
 			if (entriesList.size() == 0) {
 				String key = "";
 				for (int i = 1; i <= KeyEnum.values().length - 1; i++) {
 					key = (key.length() > 0 ? key + "-" : key) + "$";
 				}
-				keyList = new ArrayList<String>();
+				keyList = new TreeSet<String>();
 				keyList.add(key);
 			} else {
 				Collections.sort(entriesList, new KeyComparator());
@@ -99,7 +100,7 @@ public class CountsHelper implements Helper {
 		return errorModel;
 	}
 
-	private ResponseModel getHBaseResults(List<String> keyList,
+	private ResponseModel getHBaseResults(Set<String> keyList,
 			List<String> personas) {
 		int udidsCount = 0;
 		int impCount = 0;

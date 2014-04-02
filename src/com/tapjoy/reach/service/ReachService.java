@@ -1,6 +1,5 @@
 package com.tapjoy.reach.service;
 
-import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
 import com.tapjoy.reach.hbase.HBaseWrapper;
