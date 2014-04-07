@@ -12,7 +12,7 @@ public enum KeyEnum {
 	geoip_continent("geoip_continent"),
 	geoip_country("geoip_country"),
 	geoip_region("regions"),
-	//Always put personas and sources in the end
+	//Always put personas in the end
 	persona_name("personas");
 	
 	private final String keyword;
