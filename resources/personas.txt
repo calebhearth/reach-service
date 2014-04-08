@@ -1,116 +1,116 @@
-Action Game
-Adventure Game
-Angry Bird
-Animal Enthusiast
-Arcade Game
-Auto Intender
-Baseball Game
+Action Game Player
+Adventure Game Player
+Angry Birds Player
+Animal Love
+Arcade Gamer
+Auto Enthusiast
+Baseball Game Player
 Battle Gamer
-Boxing Game
-Brain Challenging Game
-Breeding Game
-Bubble Game
-Business
-Caller using Data Plan
-candy clush
-Casino Game
-Character Building Game
-Chinese Style Game
-clash of clans
-Coin Dozer
-Cosmic
-Coupon clipper
-Crime City
-Deer Hunter
-Despicable Me
-Dice Rolling Game
-Drawing Game
+Boxing Game Player
+Brain Challenging Games Player
+Breed/Hatching Game Player
+Bubble Games Player
+Business Interests
+Caller Using a Data Plan
+Candy Crush Player
+Casino Gamer
+Character Building Gamer
+Chinese Style Gamer
+Clash of Clans Player
+Coin Dozer Player
+Cosmis Games Player
+Coupon Clipper
+Crime City Player
+Deer Hunter Player
+Despicable Me Player
+Dice Rolling Games Player
+Drawing Game Player
 e-reader
 Education
-Endless Runner
-Entertainment
-Event Intender
-Fantasy Sports
+Endless Runner Player
+Entertainment Interests
+Event Scheduler
+Fantasy Sports Player
 Fashionista
-Financial
-Fishing Sport
-Fitness & Health
-Flight Intender
-Food & Dining
-Football Game
-Foreign language interest
-Fruit Ninja
-Gamble
+Financial Interests
+Fishing Sports Enthusiast
+Fitness & Health Enthusiast
+Flying/Airplanes Gamer
+Food & Dining Connoisseur
+Football Games Player
+Foreign Language Interests
+Fruit Ninja Player
+Gambling Enthusiast
 Girl Gamer
 Golfer
-Gun Bross
-Health/Medical-related
+Gun Bros Player
+Health/Medical Interests
 Home & Garden
 Japanese Style Games
 Job Seeker
 Jumping Game
-Jungle Heat
-kid learn game
-Kids Game
-Kingdoms of Camelot
-Korean Style Game
-Learning Game
+Jungle Heat Player
+Kids Learning Games Player
+Kids Game Player
+Kindgoms of Camelot Player
+Korean Style Gamer
+Learning Game (not Kids) Player
 LINE
-m-commercer
-Magazine
-Martial Art Game
-Match Game
-Mega Jump
-Movie Enthusiasts
-Music lover
-My Singing Monsters
+m-Commerce Shopper
+Magazine Reader
+Martical Arts Gamer
+Match Game Player
+Mega Jump Player
+Movie Enthusiast
+Music Lover
+My Singing Monsters Player
 New Mom
-New parents
+New Parent
 News Reader
 Outdoor Camper
 Parent/Educator
-Pet Game
-photo & video
+Pet Game Player
+Photo &Video Interests
 Physics-based game player
 Player vs Player
 Poker Gamer
-public transportation
-Puzzle Game - Pictures
-Puzzle Game -Word
-Quiz Game
-Racing Game
-Real Estate Follower
-Resource Management
-Romance
-RPG
-Sci-fi Game
-Shooting Game
+Public Transportation User
+Puzzle Gamer - Pictures
+Puzzle Gamer - Words
+Quiz Gamer
+Racing Gamer
+Real Estate Interests
+Resource Management App User
+Romantic Products/Services Interests
+Role Playing Game Player
+Sci-fi Gamer
+Shooting Gamer
 Shopper
-Simulation Game
+Simultation Game Player
 Single
-Slot Machine Game
-Smurf Village
+Slot Machine Game Player
+Smurf Village Player
 Soccer Fan
-Social Sharing
-Solitaire Game
-Spiritual or Religious user
-Sport Gamer
-Sport Management Game
+Social Sharer
+Solitaire Game Player
+Spiritial or Religious Interests
+Sports Gamer
+Sports Management Gamer
 Sports Fan
-Strategy Game
+Strategy Game Player
 Student
-Subway Surfers
-Survey-taker
-Tax-related
+Subway Surfers Player
+Survey Taker
+Tax-related Interests
 tech savvy user
-Tech/Innovation
-Texting app
-Tiny Farm
-Trade Nation
+Tech/Innovation Interests
+Texting App User
+Tiny Farm Player
+Trade Nation Player
 Traveler
-Utilities
+Utilities App User
 Video Content Consumer
-Weather
-WhatsApp
+Weather Apps User
+WhatsApp User
 Wine afficionado
-Zombie Game
+Zombie Game Player
