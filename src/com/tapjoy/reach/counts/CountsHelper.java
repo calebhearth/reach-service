@@ -141,7 +141,7 @@ public class CountsHelper implements Helper {
 					String value = HBaseWrapper.getHBaseResultToString(
 							res, CountsHbaseConstants.COLUMN_FAMILY,
 							colQualifier);
-					String val = calculateCounts((personaId % 10) - 1,
+					String val = calculateCounts((personaId % 10),
 							value);
 					String[] splits = val.split(",");
 					udidsCount += Integer.parseInt(splits[0]);
