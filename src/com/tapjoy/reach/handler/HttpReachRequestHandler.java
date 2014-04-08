@@ -293,7 +293,7 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 		if (personaId == 0) {
 			return false;
 		}
-		return false;
+		return true;
 	}
 
 	private boolean verifyPlatform(String v) {
