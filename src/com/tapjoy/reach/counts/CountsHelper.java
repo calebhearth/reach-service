@@ -132,7 +132,12 @@ public class CountsHelper implements Helper {
 				for(String persona:personas){
 					int personaId = getPersonaId(persona);
 					if (personaId == 0) {
-						return null;
+						ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid Persona");
+						String error = gson.toJson(errorModel);
+						model = new ResponseModel(error,
+								HttpResponseStatus.INTERNAL_SERVER_ERROR,
+								"application/json");
+						return model;
 					}
 					int segmentId = (int) Math.ceil(personaId / 10d);
 					

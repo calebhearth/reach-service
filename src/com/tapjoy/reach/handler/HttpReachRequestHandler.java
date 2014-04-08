@@ -38,6 +38,7 @@ import com.tapjoy.reach.params.Continents;
 import com.tapjoy.reach.params.Countries;
 import com.tapjoy.reach.params.KeyEnum;
 import com.tapjoy.reach.params.Language;
+import com.tapjoy.reach.params.Personas;
 import com.tapjoy.reach.params.Platform;
 import com.tapjoy.reach.params.Source;
 import com.tapjoy.reach.params.States;
@@ -288,8 +289,11 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 	}
 
 	private boolean verifyPersonaName(String v) {
-		// TODO Auto-generated method stub
-		return true;
+		int personaId = Personas.getInstance().getPersonaId(v);
+		if (personaId == 0) {
+			return false;
+		}
+		return false;
 	}
 
 	private boolean verifyPlatform(String v) {
