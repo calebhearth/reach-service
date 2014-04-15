@@ -87,6 +87,14 @@ geoip_country to matching values</td>
     <td>[Languages Index](languages_index.md)</td>
     <td></td>
   </tr>
+  <tr>
+    <td>sources</td>
+    <td>No</td>
+    <td>Array of Strings</td>
+    <td>The sources to include in the reach</td>
+    <td>[Sources Index](sources_index.md)</td>
+    <td></td>
+  </tr>
 </table>
 
 ## Example response
@@ -98,10 +106,7 @@ geoip_country to matching values</td>
 }
 ```
 
-geoip_country%5B%5D=USs&geoip_country%5B%5D=CA&platform%5B%5D=iose&apple_product_line%5B%5D=iPhonee&languages%5B%5D=en&os_versions%5B%5D=3&os_versions%5B%5D=4&os_versions%5B%5D=5&sources%5B%5D=offerwall
-language
-EN, ES, FR, DE, NL, JA, KO, ZH, zh-Hans, zh-Hant, RU
-
-sources
-premium, secondary, direct play, offerwall, featured, display ad, video carouse, tapjoy.com, publisher message
-Dependencies between parameters:
+## Example Call
+```
+/reach_count?geoip_country%5B%5D=USs&geoip_country%5B%5D=CA&platform%5B%5D=iose&apple_product_line%5B%5D=iPhonee&languages%5B%5D=en&os_versions%5B%5D=3&os_versions%5B%5D=4&os_versions%5B%5D=5&sources%5B%5D=offerwall
+```
