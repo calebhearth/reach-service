@@ -27,6 +27,20 @@ GET
     <td>Personas to narrow the reach calculation</td>
     <td>[Personas Index](personas_index.md)</td>
   </tr>
+  <tr>
+    <td>platform</td>
+    <td>No</td>
+    <td>String</td>
+    <td>The platform to target</td>
+    <td>[Platforms Index](platforms_index.md)</td>
+  </tr>
+  <tr>
+    <td>device_os_versions</td>
+    <td>No</td>
+    <td>Array of Strings</td>
+    <td>The list of OS versions to target</td>
+    <td>[OS Versions Index](os_versions_index.md)</td>
+  </tr>
 </table>
 
 ## Example response
@@ -39,8 +53,6 @@ GET
 ```
 
 geoip_country%5B%5D=USs&geoip_country%5B%5D=CA&platform%5B%5D=iose&apple_product_line%5B%5D=iPhonee&languages%5B%5D=en&os_versions%5B%5D=3&os_versions%5B%5D=4&os_versions%5B%5D=5&sources%5B%5D=offerwall
-platform
-android, ios, windows
 device_os_version
 android - major version.minor version(eg 4.1)
 ios - Major version (eg 5)
