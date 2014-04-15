@@ -3,7 +3,6 @@
 ## Description
 Returns Reach information for a submitted set of parameters.
 
-
 ## Endpoint
 `/reach_count`
 
