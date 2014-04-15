@@ -52,7 +52,7 @@ GET
 
 ## Currently Supported Values
 While this endpoint is under development, this is the currently supported list
-of continents.
+of regions.
 
 ### US States
 * http://en.wikipedia.org/wiki/List_of_states_and_territories_of_the_United_States

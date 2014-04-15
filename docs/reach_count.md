@@ -79,6 +79,14 @@ matching continent</td>
     <td>In order to use this option, you must set geoip_continent and
 geoip_country to matching values</td>
   </tr>
+  <tr>
+    <td>languages</td>
+    <td>No</td>
+    <td>Array of Strings</td>
+    <td>The languages to include in the reach</td>
+    <td>[Languages Index](languages_index.md)</td>
+    <td></td>
+  </tr>
 </table>
 
 ## Example response
