@@ -2,10 +2,10 @@
 ** This endpoint is not currently active **
 
 ## Description
-Returns all allowed values for platform.
+Returns all allowed values for apple product lines.
 
 ## Endpoint
-`/platforms`
+`/apple_product_lines`
 
 ## HTTP Method
 GET
@@ -19,15 +19,15 @@ None
 [
   {
     'id' : 1
-    'name' : 'android',
+    'name' : 'iPad',
   },
   {
     'id' : 2
-    'name' : 'ios',
+    'name' : 'iPhone',
   }
   {
     'id' : 3
-    'name' : 'windows',
+    'name' : 'iPod',
   }
 ]
 ```

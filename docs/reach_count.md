@@ -41,6 +41,13 @@ GET
     <td>The list of OS versions to target</td>
     <td>[OS Versions Index](os_versions_index.md)</td>
   </tr>
+  <tr>
+    <td>apple_product_line</td>
+    <td>No</td>
+    <td>String</td>
+    <td>The apple product lines to target</td>
+    <td>[Apple Product Lines Index](apple_product_lines_index.md)</td>
+  </tr>
 </table>
 
 ## Example response
@@ -53,11 +60,6 @@ GET
 ```
 
 geoip_country%5B%5D=USs&geoip_country%5B%5D=CA&platform%5B%5D=iose&apple_product_line%5B%5D=iPhonee&languages%5B%5D=en&os_versions%5B%5D=3&os_versions%5B%5D=4&os_versions%5B%5D=5&sources%5B%5D=offerwall
-device_os_version
-android - major version.minor version(eg 4.1)
-ios - Major version (eg 5)
-apple_product_line
-iPhone, iPod, iPad
 language
 EN, ES, FR, DE, NL, JA, KO, ZH, zh-Hans, zh-Hant, RU
 geoip_continent
