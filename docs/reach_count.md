@@ -19,6 +19,7 @@ GET
     <th>Format</th>
     <th>Description</th>
     <th>Allowed Values</th>
+    <th>Other Notes</th>
   </tr>
   <tr>
     <td>personas</td>
@@ -26,6 +27,7 @@ GET
     <td>Array of strings</td>
     <td>Personas to narrow the reach calculation</td>
     <td>[Personas Index](personas_index.md)</td>
+    <td></td>
   </tr>
   <tr>
     <td>platform</td>
@@ -33,6 +35,7 @@ GET
     <td>String</td>
     <td>The platform to target</td>
     <td>[Platforms Index](platforms_index.md)</td>
+    <td></td>
   </tr>
   <tr>
     <td>device_os_versions</td>
@@ -40,13 +43,41 @@ GET
     <td>Array of Strings</td>
     <td>The list of OS versions to target</td>
     <td>[OS Versions Index](os_versions_index.md)</td>
+    <td>This can only be used if the platform is specified</td>
   </tr>
   <tr>
     <td>apple_product_line</td>
-    <td>No</td>
+    <td>No *</td>
     <td>String</td>
     <td>The apple product lines to target</td>
     <td>[Apple Product Lines Index](apple_product_lines_index.md)</td>
+    <td>This argument is required if the specificed platform is iOS</td>
+  </tr>
+  <tr>
+    <td>geoip_continent</td>
+    <td>No</td>
+    <td>String</td>
+    <td>The continent to be included in the reach</td>
+    <td>[Geoip Continents Index](geoip_continents_index.md)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>geoip_country</td>
+    <td>No</td>
+    <td>Array of Strings</td>
+    <td>The countries to include in the reach</td>
+    <td>[Geoip Countries Index](geoip_countries_index.md)</td>
+    <td>In order to use this option, you must set the geoip_continent to a
+matching continent</td>
+  </tr>
+  <tr>
+    <td>geoip_region</td>
+    <td>No</td>
+    <td>Array of Strings</td>
+    <td>The regions to include in the reach</td>
+    <td>[Geoip Regions Index](geoip_regions_index.md)</td>
+    <td>In order to use this option, you must set geoip_continent and
+geoip_country to matching values</td>
   </tr>
 </table>
 
@@ -62,22 +93,7 @@ GET
 geoip_country%5B%5D=USs&geoip_country%5B%5D=CA&platform%5B%5D=iose&apple_product_line%5B%5D=iPhonee&languages%5B%5D=en&os_versions%5B%5D=3&os_versions%5B%5D=4&os_versions%5B%5D=5&sources%5B%5D=offerwall
 language
 EN, ES, FR, DE, NL, JA, KO, ZH, zh-Hans, zh-Hant, RU
-geoip_continent
-AF, AS, EU, NA, OC, SA
-geoip_country
-AR, AU, BR, CA, CL, CN, CO, DE, ES, FR, GB, GR, HK, ID, IL, IN, IT, JP, KR, KW, MX, MY, NL, RU, SA, SE, SG, TH, TR, TW, US
-regions
-US states and territories (54): http://en.wikipedia.org/wiki/List_of_states_and_territories_of_the_United_States
-Canadian prov + territories: NB, NU, NL, MB, YT, BC, PE, NT, QC, NS, AB, SK, ON
 
 sources
 premium, secondary, direct play, offerwall, featured, display ad, video carouse, tapjoy.com, publisher message
 Dependencies between parameters:
-
-device_os_version can be targeted only if platform is present.
-geoip_region can be targeted only if geoip_country, geoip_continent is present.
-geoip_country can be targeted only if geoip_continent is present.
-apple_product_line is required whenever you choose ios as a platform
-Choosing a device type of iPhone, iTouch or iPad rquires both apple_product_line and platform be set
-Currently choosing platform of Android requires no additional param be sent
-The service calculates counts which are a union within fields, and intersection across fields.
