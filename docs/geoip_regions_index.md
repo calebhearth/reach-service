@@ -36,16 +36,22 @@ GET
     'id' : 1
     'name' : 'NC',
     'properName' : 'North Carolina'
+    'dependentLocationType' : 'geoip_country',
+    'dependentLocationId' : 8
   },
   {
     'id' : 2
     'name' : 'Washington',
     'properName' : 'Washington'
+    'dependentLocationType' : 'geoip_country',
+    'dependentLocationId' : 8
   }
   {
     'id' : 3
     'name' : 'TX',
     'properName' : 'Texas'
+    'dependentLocationType' : 'geoip_country',
+    'dependentLocationId' : 8
   }
 ]
 ```
