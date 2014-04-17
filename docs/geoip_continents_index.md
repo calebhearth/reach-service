@@ -20,14 +20,17 @@ None
   {
     'id' : 1
     'name' : 'AF',
+    'properName': 'Africa'
   },
   {
     'id' : 2
     'name' : 'AS',
+    'properName': 'Asia'
   }
   {
     'id' : 3
     'name' : 'EU',
+    'properName': 'Europe'
   }
 ]
 ```

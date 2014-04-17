@@ -5,7 +5,7 @@
 Returns all allowed values for geoip_contries for a given continent.
 
 ## Endpoint
-`/geoip_continents/:continent_id/geoip_contries`
+`/geoip_continents/:continent_id/geoip_countries`
 
 ## HTTP Method
 GET
@@ -35,17 +35,23 @@ GET
   {
     'id' : 1
     'name' : 'AR',
-    'properName' : 'Argentina'
+    'properName' : 'Argentina',
+    'dependentLocationType' : 'geoip_continent',
+    'dependentLocationId' : 4
   },
   {
     'id' : 2
     'name' : 'AU',
     'properName' : 'Austrailia'
+    'dependentLocationType' : 'geoip_continent',
+    'dependentLocationId' : 5
   }
   {
     'id' : 3
     'name' : 'BR',
     'properName' : 'Brazil'
+    'dependentLocationType' : 'geoip_continent',
+    'dependentLocationId' : 4
   }
 ]
 ```
