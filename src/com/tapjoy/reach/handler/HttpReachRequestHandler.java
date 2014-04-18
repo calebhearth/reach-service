@@ -1,11 +1,14 @@
 package com.tapjoy.reach.handler;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -36,10 +39,12 @@ import com.tapjoy.reach.helper.Helper;
 import com.tapjoy.reach.params.AppleProductLine;
 import com.tapjoy.reach.params.Continents;
 import com.tapjoy.reach.params.Countries;
+import com.tapjoy.reach.params.CountryContinentMap;
 import com.tapjoy.reach.params.KeyEnum;
 import com.tapjoy.reach.params.Language;
 import com.tapjoy.reach.params.Personas;
 import com.tapjoy.reach.params.Platform;
+import com.tapjoy.reach.params.RegionCountryMap;
 import com.tapjoy.reach.params.Source;
 import com.tapjoy.reach.params.States;
 import com.tapjoy.reach.service.ErrorModel;
@@ -194,9 +199,8 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 			}
 		}
-
-		// modifyLanguage(params);
-		// modifyPlatform(params);
+		
+	//	addGeoDependencies(params);
 
 		Helper countsHelper = new CountsHelper();
 		ResponseModel results = countsHelper.getResult(params);
@@ -204,6 +208,50 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 	}
 
 	
+	private void addGeoDependencies(Map<String, List<String>> params) {
+		String countryKey = KeyEnum.getValue(KeyEnum.geoip_country);
+		String continentKey = KeyEnum.getValue(KeyEnum.geoip_continent);
+		String regionKey = KeyEnum.getValue(KeyEnum.geoip_region);
+		if (params.get(regionKey) != null) {
+			// add country and continent
+			Set<String> countries = new TreeSet<String>();
+			if(params.get(countryKey) != null){
+				countries.addAll(params.get(countryKey));
+			}
+			Set<String> continents = new TreeSet<String>();
+			if(params.get(continentKey) != null){
+				continents.addAll(params.get(continentKey));
+			}
+			for (String region : params.get(regionKey)) {
+				String country = RegionCountryMap.getInstance().getCountry(
+						region);
+				String continent = CountryContinentMap.getInstance()
+						.getContinent(country);
+				countries.add(country);
+				continents.add(continent);
+			}
+			List<String> countriesList = new ArrayList<String>(countries);
+			List<String> continentsList = new ArrayList<String>(continents);
+			params.put(countryKey, countriesList);
+			params.put(continentKey, continentsList);
+
+		}
+
+		else if (params.get(countryKey) != null) {
+			Set<String> continents = new TreeSet<String>(params.get(continentKey));
+			for (String country : params.get(countryKey)) {
+				String continent = CountryContinentMap.getInstance()
+						.getContinent(country);
+				continents.add(continent);
+			}
+			List<String> continentsList = new ArrayList<String>(continents);
+			params.put(continentKey, continentsList);
+
+		}
+		
+	}
+
+
 	private Map<String, List<String>> parsePostRequestParams(HttpRequest request) {
 		ChannelBuffer content = request.getContent();
 		if (!content.readable()) {
@@ -221,33 +269,6 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 			logger.error(ex);
 			return null;
 		}
-	}
-
-	private void modifyLanguage(Map<String, List<String>> params) {
-		List<String> vals = params.get(KeyEnum.language.toString());
-		if (vals == null) {
-			return;
-		}
-		for (int i = 0; i < vals.size(); i++) {
-			Language enumName = Language.fromString(vals.get(i));
-			vals.set(i, enumName.name().toUpperCase());
-		}
-
-	}
-
-	private void modifyPlatform(Map<String, List<String>> params) {
-		List<String> vals = params.get(KeyEnum.platform.toString());
-		if (vals == null) {
-			return;
-		}
-		for (int i = 0; i < vals.size(); i++) {
-			Platform enumName = Platform.fromString(vals.get(i));
-			if (enumName.equals(Platform.IOS)) {
-				vals.set(i, "IPHONE");
-			}
-
-		}
-
 	}
 
 	private boolean verifyDeviceOsVersion(String v) {

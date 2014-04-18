@@ -35,13 +35,13 @@ public class CountsHelper implements Helper {
 			Map<String, List<String>> params = new HashMap<String, List<String>>(
 					p);
 
-			ErrorModel errorModel = checkDataQuality(p);
-			if (errorModel != null) {
+			//ErrorModel errorModel = checkDataQuality(p);
+			/*if (errorModel != null) {
 				String error = gson.toJson(errorModel);
 				ResponseModel model = new ResponseModel(error,
 						HttpResponseStatus.BAD_REQUEST, "application/json");
 				return model;
-			}
+			}*/
 
 			List<String> personas = params.get(KeyEnum
 					.getValue(KeyEnum.persona_name));
@@ -61,10 +61,10 @@ public class CountsHelper implements Helper {
 				keyList.add(key);
 			} else {
 				Collections.sort(entriesList, new KeyComparator());
-				keyList = new KeyParser().collectKeys("", entriesList,0);
+				keyList = new KeyParser().createKeys(params, "", 0);
 			}
 
-			ResponseModel model = getHBaseResults(keyList, personas);
+ 			ResponseModel model = getHBaseResults(keyList, personas);
 			return model;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -129,6 +129,15 @@ public class CountsHelper implements Helper {
 			}
 			
 			if(personas != null && personas.size() > 0){
+				int totalUdidsForPersonas = getTotalUdidsForPersona(res);
+				int totalUdids = 0;
+				String udidColQualifier = "id";
+				String udidValue = HBaseWrapper.getHBaseResultToString(
+						res, CountsHbaseConstants.COLUMN_FAMILY,
+						udidColQualifier);
+				if (StringUtils.isNotBlank(udidValue)) {
+					totalUdids = Integer.parseInt(udidValue);
+				}
 				for(String persona:personas){
 					int personaId = getPersonaId(persona);
 					if (personaId == 0) {
@@ -149,7 +158,9 @@ public class CountsHelper implements Helper {
 					String val = calculateCounts((personaId % 10),
 							value);
 					String[] splits = val.split(",");
+					int personaUdid = Integer.parseInt(splits[0]);
 					udidsCount += Integer.parseInt(splits[0]);
+					//udidsCount += totalUdids * ((double)personaUdid/totalUdidsForPersonas);
 					impCount += Integer.parseInt(splits[1]);					
 				}
 				
@@ -182,6 +193,25 @@ public class CountsHelper implements Helper {
 		return model;
 	}
 
+	private int getTotalUdidsForPersona(Result res) {
+		int sum = 0;
+		for(int i=1;i<=CountsHbaseConstants.TOTAL_PERSONAS;i++){
+			int segmentId = (int) Math.ceil(i / 10d);
+			
+			String colQualifier = "s"
+					+ segmentId;
+			String value = HBaseWrapper.getHBaseResultToString(
+					res, CountsHbaseConstants.COLUMN_FAMILY,
+					colQualifier);
+			String[] parts = value.split(":");
+			for(int j = 0;j<parts.length;j++){
+				String[] splits = parts[j].split(",");
+				sum += Integer.parseInt(splits[0]);
+			}
+		}
+		return sum;
+	}
+
 	private int getPersonaId(String persona) {
 		int id = Personas.getInstance().getPersonaId(persona);
 		return id;
@@ -192,6 +222,7 @@ public class CountsHelper implements Helper {
 		if (parts == null) {
 			return "";
 		}
+		key = key==0 ? 9: key - 1;
 		return parts[key];
 	}
 
