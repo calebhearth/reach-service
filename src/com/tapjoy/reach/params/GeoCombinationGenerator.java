@@ -3,26 +3,26 @@ package com.tapjoy.reach.params;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 public class GeoCombinationGenerator {
 
 	public Set<String> getGeoCombinations(Map<String, List<String>> params) {
-		Set<String> keys = new TreeSet<String>();
+		Set<String> keys = new HashSet<String>();
 
-		Set<String> continents = new TreeSet<String>();
+		Set<String> continents = new HashSet<String>();
 		if (params.get(KeyEnum.getValue(KeyEnum.geoip_continent)) != null) {
 			continents.addAll(params.get(KeyEnum
 					.getValue(KeyEnum.geoip_continent)));
 		}
 
-		Set<String> countries = new TreeSet<String>();
+		Set<String> countries = new HashSet<String>();
 		if (params.get(KeyEnum.getValue(KeyEnum.geoip_country)) != null) {
 			countries
 					.addAll(params.get(KeyEnum.getValue(KeyEnum.geoip_country)));
 		}
 
-		Set<String> regions = new TreeSet<String>();
+		Set<String> regions = new HashSet<String>();
 		if (params.get(KeyEnum.getValue(KeyEnum.geoip_region)) != null) {
 			regions.addAll(params.get(KeyEnum.getValue(KeyEnum.geoip_region)));
 		}

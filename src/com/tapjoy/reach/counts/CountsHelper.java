@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.hbase.client.Result;
@@ -35,14 +35,6 @@ public class CountsHelper implements Helper {
 			Map<String, List<String>> params = new HashMap<String, List<String>>(
 					p);
 
-			//ErrorModel errorModel = checkDataQuality(p);
-			/*if (errorModel != null) {
-				String error = gson.toJson(errorModel);
-				ResponseModel model = new ResponseModel(error,
-						HttpResponseStatus.BAD_REQUEST, "application/json");
-				return model;
-			}*/
-
 			List<String> personas = params.get(KeyEnum
 					.getValue(KeyEnum.persona_name));
 			params.remove(KeyEnum.getValue(KeyEnum.persona_name));
@@ -57,7 +49,7 @@ public class CountsHelper implements Helper {
 				for (int i = 1; i <= KeyEnum.values().length - 1; i++) {
 					key = (key.length() > 0 ? key + "-" : key) + "$";
 				}
-				keyList = new TreeSet<String>();
+				keyList = new HashSet<String>();
 				keyList.add(key);
 			} else {
 				Collections.sort(entriesList, new KeyComparator());
@@ -78,32 +70,11 @@ public class CountsHelper implements Helper {
 		}
 	}
 
-	private ErrorModel checkDataQuality(Map<String, List<String>> p) {
-		ErrorModel errorModel = null;
-		if (p.get(KeyEnum.getValue(KeyEnum.device_os_version)) != null
-				&& p.get(KeyEnum.getValue(KeyEnum.platform)) == null) {
-			errorModel = new ErrorModel(
-					HttpResponseStatus.BAD_REQUEST.getCode(),
-					"Missing parameters: platform missing");
-		} else if (p.get(KeyEnum.getValue(KeyEnum.geoip_country)) != null
-				&& p.get(KeyEnum.getValue(KeyEnum.geoip_continent)) == null) {
-			errorModel = new ErrorModel(
-					HttpResponseStatus.BAD_REQUEST.getCode(),
-					"Missing parameters: geoip_continent missing");
-		} else if (p.get(KeyEnum.getValue(KeyEnum.geoip_region)) != null
-				&& p.get(KeyEnum.getValue(KeyEnum.geoip_country)) == null) {
-			errorModel = new ErrorModel(
-					HttpResponseStatus.BAD_REQUEST.getCode(),
-					"Missing parameters: geoip_country missing");
-		}
-
-		return errorModel;
-	}
-
 	private ResponseModel getHBaseResults(Set<String> keyList,
 			List<String> personas) {
-		int udidsCount = 0;
+		int reachAudienceCount = 0;
 		int impCount = 0;
+		int uniqueViewersCount = 0;
 		ResponseModel model = null;
 		for (String key : keyList) {
 			key = key.toUpperCase();
@@ -129,15 +100,6 @@ public class CountsHelper implements Helper {
 			}
 			
 			if(personas != null && personas.size() > 0){
-				int totalUdidsForPersonas = getTotalUdidsForPersona(res);
-				int totalUdids = 0;
-				String udidColQualifier = "id";
-				String udidValue = HBaseWrapper.getHBaseResultToString(
-						res, CountsHbaseConstants.COLUMN_FAMILY,
-						udidColQualifier);
-				if (StringUtils.isNotBlank(udidValue)) {
-					totalUdids = Integer.parseInt(udidValue);
-				}
 				for(String persona:personas){
 					int personaId = getPersonaId(persona);
 					if (personaId == 0) {
@@ -150,7 +112,7 @@ public class CountsHelper implements Helper {
 					}
 					int segmentId = (int) Math.ceil(personaId / 10d);
 					
-					String colQualifier = "s"
+					String colQualifier = "ps"
 							+ segmentId;
 					String value = HBaseWrapper.getHBaseResultToString(
 							res, CountsHbaseConstants.COLUMN_FAMILY,
@@ -158,24 +120,23 @@ public class CountsHelper implements Helper {
 					String val = calculateCounts((personaId % 10),
 							value);
 					String[] splits = val.split(",");
-					int personaUdid = Integer.parseInt(splits[0]);
-					udidsCount += Integer.parseInt(splits[0]);
-					//udidsCount += totalUdids * ((double)personaUdid/totalUdidsForPersonas);
-					impCount += Integer.parseInt(splits[1]);					
+					reachAudienceCount += Integer.parseInt(splits[0]);
+					uniqueViewersCount += Integer.parseInt(splits[1]);
+					impCount += Integer.parseInt(splits[2]);					
 				}
 				
 			}
 			
 			else{
-				String udidColQualifier = "id";
-				String udidValue = HBaseWrapper.getHBaseResultToString(
+				String reachAudienceColQualifier = "ra";
+				String reachAudienceValue = HBaseWrapper.getHBaseResultToString(
 						res, CountsHbaseConstants.COLUMN_FAMILY,
-						udidColQualifier);
-				if (StringUtils.isNotBlank(udidValue)) {
-					udidsCount += Integer.parseInt(udidValue);
+						reachAudienceColQualifier);
+				if (StringUtils.isNotBlank(reachAudienceValue)) {
+					reachAudienceCount += Integer.parseInt(reachAudienceValue);
 				}
 				
-				String impColQualifier = "sr";
+				String impColQualifier = "im";
 				String impValue = HBaseWrapper.getHBaseResultToString(
 						res, CountsHbaseConstants.COLUMN_FAMILY,
 						impColQualifier);
@@ -183,33 +144,22 @@ public class CountsHelper implements Helper {
 					impCount += Integer.parseInt(impValue);
 				}
 				
+				String uniqueViewersColQualifier = "uv";
+				String uniqueViewersValue = HBaseWrapper.getHBaseResultToString(
+						res, CountsHbaseConstants.COLUMN_FAMILY,
+						uniqueViewersColQualifier);
+				if (StringUtils.isNotBlank(uniqueViewersValue)) {
+					uniqueViewersCount += Integer.parseInt(uniqueViewersValue);
+				}
+				
 			}
 			
 		}
-		CountsModel countsModel = new CountsModel(udidsCount, impCount);
+		CountsModel countsModel = new CountsModel(reachAudienceCount, impCount, uniqueViewersCount);
 		String json = gson.toJson(countsModel);
 		model = new ResponseModel(json, HttpResponseStatus.OK,
 				"application/json");
 		return model;
-	}
-
-	private int getTotalUdidsForPersona(Result res) {
-		int sum = 0;
-		for(int i=1;i<=CountsHbaseConstants.TOTAL_PERSONAS;i++){
-			int segmentId = (int) Math.ceil(i / 10d);
-			
-			String colQualifier = "s"
-					+ segmentId;
-			String value = HBaseWrapper.getHBaseResultToString(
-					res, CountsHbaseConstants.COLUMN_FAMILY,
-					colQualifier);
-			String[] parts = value.split(":");
-			for(int j = 0;j<parts.length;j++){
-				String[] splits = parts[j].split(",");
-				sum += Integer.parseInt(splits[0]);
-			}
-		}
-		return sum;
 	}
 
 	private int getPersonaId(String persona) {

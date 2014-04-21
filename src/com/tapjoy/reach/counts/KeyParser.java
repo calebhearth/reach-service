@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -25,7 +25,7 @@ public class KeyParser {
 	private Set<String> keyList;
 
 	public KeyParser() {
-		keyList = new TreeSet<String>();
+		keyList = new HashSet<String>();
 	}
 
 	public Set<String> collectKeys(String key,

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -40,6 +40,9 @@ import com.tapjoy.reach.params.AppleProductLine;
 import com.tapjoy.reach.params.Continents;
 import com.tapjoy.reach.params.Countries;
 import com.tapjoy.reach.params.CountryContinentMap;
+import com.tapjoy.reach.params.DeviceManufacturer;
+import com.tapjoy.reach.params.DeviceModel;
+import com.tapjoy.reach.params.DeviceSize;
 import com.tapjoy.reach.params.KeyEnum;
 import com.tapjoy.reach.params.Language;
 import com.tapjoy.reach.params.Personas;
@@ -130,6 +133,33 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 					}
 				}
 				break;
+			case device_manufacturer:
+				for (String v : values) {
+					check = verifyDeviceManufacturer(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
+				}
+				break;
+			case device_model:
+				for (String v : values) {
+					check = verifyDeviceModel(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
+				}
+				break;
+			case device_size:
+				for (String v : values) {
+					check = verifyDeviceSize(v);
+					if (!check) {
+						writeResponse(invalidParamResponse(keyEnum, v), e);
+						return;
+					}
+				}
+				break;
 			case geoip_continent:
 				for (String v : values) {
 					check = verifyContinent(v);
@@ -199,58 +229,11 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 
 			}
 		}
-		
-	//	addGeoDependencies(params);
 
 		Helper countsHelper = new CountsHelper();
 		ResponseModel results = countsHelper.getResult(params);
 		writeResponse(results, e);
 	}
-
-	
-	private void addGeoDependencies(Map<String, List<String>> params) {
-		String countryKey = KeyEnum.getValue(KeyEnum.geoip_country);
-		String continentKey = KeyEnum.getValue(KeyEnum.geoip_continent);
-		String regionKey = KeyEnum.getValue(KeyEnum.geoip_region);
-		if (params.get(regionKey) != null) {
-			// add country and continent
-			Set<String> countries = new TreeSet<String>();
-			if(params.get(countryKey) != null){
-				countries.addAll(params.get(countryKey));
-			}
-			Set<String> continents = new TreeSet<String>();
-			if(params.get(continentKey) != null){
-				continents.addAll(params.get(continentKey));
-			}
-			for (String region : params.get(regionKey)) {
-				String country = RegionCountryMap.getInstance().getCountry(
-						region);
-				String continent = CountryContinentMap.getInstance()
-						.getContinent(country);
-				countries.add(country);
-				continents.add(continent);
-			}
-			List<String> countriesList = new ArrayList<String>(countries);
-			List<String> continentsList = new ArrayList<String>(continents);
-			params.put(countryKey, countriesList);
-			params.put(continentKey, continentsList);
-
-		}
-
-		else if (params.get(countryKey) != null) {
-			Set<String> continents = new TreeSet<String>(params.get(continentKey));
-			for (String country : params.get(countryKey)) {
-				String continent = CountryContinentMap.getInstance()
-						.getContinent(country);
-				continents.add(continent);
-			}
-			List<String> continentsList = new ArrayList<String>(continents);
-			params.put(continentKey, continentsList);
-
-		}
-		
-	}
-
 
 	private Map<String, List<String>> parsePostRequestParams(HttpRequest request) {
 		ChannelBuffer content = request.getContent();
@@ -269,6 +252,30 @@ public class HttpReachRequestHandler extends SimpleChannelUpstreamHandler {
 			logger.error(ex);
 			return null;
 		}
+	}
+	
+	private boolean verifyDeviceModel(String v) {
+		DeviceModel e = DeviceModel.getEnum(v);
+		if(e == null){
+			return false;
+		}
+		return true;
+	}
+
+	private boolean verifyDeviceManufacturer(String v) {
+		DeviceManufacturer e = DeviceManufacturer.getEnum(v);
+		if(e == null){
+			return false;
+		}
+		return true;
+	}
+
+	private boolean verifyDeviceSize(String v) {
+		DeviceSize e = DeviceSize.getEnum(v);
+		if(e == null){
+			return false;
+		}
+		return true;
 	}
 
 	private boolean verifyDeviceOsVersion(String v) {

@@ -3,15 +3,15 @@ package com.tapjoy.reach.params;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 public class DeviceCombinationGenerator {
 
 	public Set<String> getDeviceCombinations(Map<String, List<String>> params) {
-		Set<String> keys = new TreeSet<String>();
+		Set<String> keys = new HashSet<String>();
 		
-		Set<String> platforms = new TreeSet<String>();
-		Set<String> appleProductLine = new TreeSet<String>();
+		Set<String> platforms = new HashSet<String>();
+		Set<String> appleProductLine = new HashSet<String>();
 		if (params.get(KeyEnum.getValue(KeyEnum.apple_product_line)) != null) {
 			appleProductLine.addAll(params.get(KeyEnum
 					.getValue(KeyEnum.apple_product_line)));
@@ -35,9 +35,9 @@ public class DeviceCombinationGenerator {
 		
 		for (String platform : platforms) {
 			if (platform.equalsIgnoreCase(Platform.IOS.toString())) {
-				Set<String> cleanVersions = new TreeSet<String>();
+				Set<String> cleanVersions = new HashSet<String>();
 				if (params.get(KeyEnum.getValue(KeyEnum.device_os_version)) != null) {
-					Set<String> versions = new TreeSet<String>(
+					Set<String> versions = new HashSet<String>(
 							params.get(KeyEnum
 									.getValue(KeyEnum.device_os_version)));
 					if (versions.size() > 0) {
@@ -61,7 +61,7 @@ public class DeviceCombinationGenerator {
 			}
 
 			else if (platform.equalsIgnoreCase(Platform.ANDROID.name())) {
-				Set<String> versions = new TreeSet<String>();
+				Set<String> versions = new HashSet<String>();
 				if (params.get(KeyEnum.getValue(KeyEnum.device_os_version)) != null) {
 					versions.addAll(params.get(KeyEnum
 							.getValue(KeyEnum.device_os_version)));
