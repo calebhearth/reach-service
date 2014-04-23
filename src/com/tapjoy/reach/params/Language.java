@@ -21,21 +21,16 @@ public enum Language {
 		this.keyword = code;
 	}
 	
-	public static boolean hasValue(String language) {
-		for (Language c : Language.values()) {
-			if (c.name().equalsIgnoreCase(language)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static Language fromString(String val){
+	public static Language getEnum(String val){
 		for(Language key: Language.values()){
 			if(key.keyword.equalsIgnoreCase(val)){
 				return key;
 			}
 		}
 		return null;
+	}
+	
+	public String getKeyword(){
+		return this.keyword;
 	}
 }

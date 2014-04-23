@@ -29,8 +29,10 @@ public class GeoCombinationGenerator {
 
 		for (String region : regions) {
 			String country = RegionCountryMap.getInstance().getCountry(region);
+			country = country.toUpperCase();
 			String continent = CountryContinentMap.getInstance().getContinent(
 					country);
+			continent = continent.toUpperCase();
 			String key = continent + "-" + country + "-" + region;
 			keys.add(key);
 			continents.remove(continent);
@@ -40,6 +42,7 @@ public class GeoCombinationGenerator {
 		for (String country : countries) {
 			String continent = CountryContinentMap.getInstance().getContinent(
 					country);
+			continent = continent.toUpperCase();
 			String key = continent + "-" + country + "-$";
 			keys.add(key);
 			continents.remove(continent);

@@ -1,11 +1,11 @@
 package com.tapjoy.reach.counts;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -18,9 +18,10 @@ import com.tapjoy.reach.params.Platform;
 public class KeyParser {
 
 	private final int SOURCE = 0;
-	private final int LANG = 1;
-	private final int DEVICE = 2;
-	private final int GEO = 3;
+	private final int LANG = SOURCE + 1;
+	private final int DEVICE = LANG + 1;
+	//private final int DEVICE_SECONDARY = DEVICE + 1;
+	private final int GEO = DEVICE + 1;
 
 	private Set<String> keyList;
 
@@ -33,7 +34,7 @@ public class KeyParser {
 
 		Entry<String, List<String>> entry = entries.get(0);
 		String param = entry.getKey();
-		KeyEnum keyEnum = KeyEnum.fromString(param);
+		KeyEnum keyEnum = KeyEnum.getEnum(param);
 		int rank = keyEnum.ordinal();
 
 		if (rank > presentPos) {
@@ -132,6 +133,20 @@ public class KeyParser {
 				createKeys(params, newKey, pos + 1);
 			}
 			break;
+			
+	/*	case DEVICE_SECONDARY: 
+			List<String> deviceSecondary = new ArrayList<String>(
+					new DeviceSecondaryCombinationGenerator()
+							.getDeviceSecondaryCombinations(params));
+			if (deviceSecondary.size() == 0) {
+				deviceSecondary.add("$-$-$");
+			}
+			for (String device : deviceSecondary) {
+				String newKey = key + "-" + device;
+				createKeys(params, newKey, pos + 1);
+			}
+			break;*/
+			
 
 		case GEO:
 			List<String> geos = new ArrayList<String>(

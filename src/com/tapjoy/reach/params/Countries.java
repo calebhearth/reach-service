@@ -1,14 +1,28 @@
 package com.tapjoy.reach.params;
 public enum Countries {
 	// RW - rest of world
-	AR, AU, BR, CA, CL, CN, CO, DE, ES, FR, GB, GR, HK, ID, IL, IN, IT, JP, KR, KW, MX, MY, NL, RU, SA, SE, SG, TH, TR, TW, US, RW;
+	AR("Argentina"), AU("Australia"), BR("Brazil"), CA("Canada"), CL("Chile"), CN("China"), 
+	CO("Colombia"), DE("Germany"), ES("Spain"), FR("France"), GB("United Kingdom"), GR("Greece"), 
+	HK("Hong Kong"), ID("Indonesia"), IL("Israel"), IN("India"), IT("Italy"), JP("Japan"), KR("Korea"),
+	KW("Kuwait"), MX("Mexico"), MY("Malaysia"), NL("Netherlands"), RU("Russia"), SA("Saudi Arabia"), 
+	SE("Sweden"), SG("Singapore"), TH("Thailand"), TR("Turkey"), TW("Taiwan"), US("United States");
 
-	public static boolean hasValue(String country) {
+	private String keyword;
+	
+	private Countries(String k) {
+		this.keyword = k;
+	}
+	
+	public static Countries getEnum (String country) {
 		for (Countries c : Countries.values()) {
 			if (c.name().equalsIgnoreCase(country)) {
-				return true;
+				return c;
 			}
 		}
-		return false;
+		return null;
+	}
+	
+	public String getKeyword(){
+		return keyword;
 	}
 }

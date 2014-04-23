@@ -1,14 +1,24 @@
 package com.tapjoy.reach.params;
 public enum Continents {
-	SA, AS, AF, EU, OC, NA;
+	SA("South America"), AS("Asia"), AF("Africa"), EU("Europe"), OC("Oceania"), NA("North America");
+	
+	private String keyword;
+	
+	private Continents(String k) {
+		this.keyword = k;
+	}
 
-	public static boolean hasValue(String continent) {
+	public static Continents getEnum(String continent) {
 		for (Continents c : Continents.values()) {
 			if (c.name().equalsIgnoreCase(continent)) {
-				return true;
+				return c;
 			}
 		}
-		return false;
+		return null;
+	}
+	
+	public String getKeyword(){
+		return keyword;
 	}
 
 }

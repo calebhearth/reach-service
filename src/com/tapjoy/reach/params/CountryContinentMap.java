@@ -4,7 +4,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -53,6 +55,10 @@ public class CountryContinentMap {
 			return true;
 		}
 		return false;
+	}
+	
+	public Set<Object> getKeys(){
+		return prop.keySet();
 	}
 	
 	

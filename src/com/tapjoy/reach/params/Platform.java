@@ -1,7 +1,7 @@
 package com.tapjoy.reach.params;
 
 public enum Platform {
-	ANDROID("android"),WINDOWS("windows"),IOS("ios"), UNKNOWN("_");
+	ANDROID("android"),IOS("ios"),WINDOWS("windows");
 	
 	private String keyword;
 	
@@ -9,17 +9,17 @@ public enum Platform {
 		this.keyword = key;
 	}
 	
-	public static Platform getEnum(String text){
+	public static Platform matchText(String text){
 		text = text.toLowerCase();
 		for(Platform a:Platform.values()){
 			if(text.contains(a.keyword)){
 				return a;
 			}
 		}
-		return Platform.UNKNOWN;
+		return null;
 	}
 
-	public static Platform fromString(String val){
+	public static Platform getEnum(String val){
 		for(Platform key: Platform.values()){
 			if(key.keyword.equalsIgnoreCase(val)){
 				return key;

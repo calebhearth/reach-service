@@ -10,16 +10,7 @@ public enum Source {
 		this.keyword = code;
 	}
 	
-	public static boolean hasValue(String source) {
-		for (Source c : Source.values()) {
-			if (c.name().equalsIgnoreCase(source)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static Source fromString(String val){
+	public static Source getEnum(String val){
 		for(Source key: Source.values()){
 			if(key.keyword.equalsIgnoreCase(val)){
 				return key;

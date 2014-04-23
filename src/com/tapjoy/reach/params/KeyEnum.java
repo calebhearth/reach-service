@@ -8,7 +8,7 @@ public enum KeyEnum {
 	platform("platform"),
 	device_os_version("device_os_version"),
 	device_manufacturer("device_manufacturer"),	
-	device_model("device_type"),
+	device_type("device_type"),
 	device_size("device_size"),
 	geoip_continent("geoip_continent"),
 	geoip_country("geoip_country"),
@@ -22,7 +22,7 @@ public enum KeyEnum {
 		this.keyword = key;
 	}
 	
-	public static KeyEnum fromString(String val){
+	public static KeyEnum getEnum(String val){
 		for(KeyEnum key: KeyEnum.values()){
 			if(key.keyword.equalsIgnoreCase(val)){
 				return key;

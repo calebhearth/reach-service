@@ -10,7 +10,7 @@ public enum AppleProductLine {
 		this.keyword = key;
 	}
 	
-	public static AppleProductLine getEnum(String text){
+	public static AppleProductLine matchText(String text){
 		text = text.toLowerCase();
 		for(AppleProductLine a:AppleProductLine.values()){
 			if(text.contains(a.keyword)){
@@ -20,7 +20,7 @@ public enum AppleProductLine {
 		return null;
 	}
 	
-	public static AppleProductLine fromString(String val){
+	public static AppleProductLine getEnum(String val){
 		for(AppleProductLine key: AppleProductLine.values()){
 			if(key.keyword.equalsIgnoreCase(val)){
 				return key;
