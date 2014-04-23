@@ -1,11 +1,11 @@
-# Geoip Regions Index
+# Regions Index
 ** This endpoint is not currently active **
 
 ## Description
 Returns all allowed values for regions for a given geoip_country.
 
 ## Endpoint
-`/geoip_countries/:country_id/geoip_regions`
+`/geoip_countries/:country_id/regions`
 
 ## HTTP Method
 GET
