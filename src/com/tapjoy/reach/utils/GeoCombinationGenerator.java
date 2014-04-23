@@ -1,9 +1,11 @@
-package com.tapjoy.reach.params;
+package com.tapjoy.reach.utils;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
+
+import com.tapjoy.reach.params.KeyEnum;
 
 public class GeoCombinationGenerator {
 

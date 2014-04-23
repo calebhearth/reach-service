@@ -10,10 +10,10 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 import com.tapjoy.reach.params.AppleProductLine;
-import com.tapjoy.reach.params.DeviceCombinationGenerator;
-import com.tapjoy.reach.params.GeoCombinationGenerator;
 import com.tapjoy.reach.params.KeyEnum;
 import com.tapjoy.reach.params.Platform;
+import com.tapjoy.reach.utils.DeviceCombinationGenerator;
+import com.tapjoy.reach.utils.GeoCombinationGenerator;
 
 public class KeyParser {
 

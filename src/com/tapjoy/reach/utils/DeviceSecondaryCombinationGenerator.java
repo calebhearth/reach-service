@@ -8,8 +8,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 import com.tapjoy.reach.params.KeyEnum;
-import com.tapjoy.reach.params.ManufacturerSizeMap;
-import com.tapjoy.reach.params.ModelManufacturerMap;
 
 public class DeviceSecondaryCombinationGenerator {
 	

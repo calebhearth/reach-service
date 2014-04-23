@@ -1,4 +1,4 @@
-package com.tapjoy.reach.params;
+package com.tapjoy.reach.utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class RegionCountryMap {
 		InputStream  input = null;
 		 
 		try { 
-			URL url = CountryContinentMap.class.getClassLoader().getResource("region_to_country.dat");
+			URL url = RegionCountryMap.class.getClassLoader().getResource("region_to_country.dat");
 			String file = url.getPath();
 			prop = new Properties();
 			input = new FileInputStream(file);

@@ -1,4 +1,4 @@
-package com.tapjoy.reach.params;
+package com.tapjoy.reach.utils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,19 +8,19 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-public class ModelManufacturerMap {
+public class ManufacturerSizeMap {
 	
-	private static ModelManufacturerMap instance = new ModelManufacturerMap();
-	private Logger logger = Logger.getLogger(ModelManufacturerMap.class);
+	private static ManufacturerSizeMap instance = new ManufacturerSizeMap();
+	private Logger logger = Logger.getLogger(ManufacturerSizeMap.class);
 	
 	private Properties prop;
 	
-	private ModelManufacturerMap(){
+	private ManufacturerSizeMap(){
 		
 		BufferedReader  input = null;
 		 
 		try { 
-			URL url = ModelManufacturerMap.class.getClassLoader().getResource("model_to_manufacturer.dat");
+			URL url = CountryContinentMap.class.getClassLoader().getResource("manufacturer_to_size.dat");
 			String file = url.getPath();
 			prop = new Properties();
 			input = new BufferedReader(new FileReader(file));
@@ -44,20 +44,19 @@ public class ModelManufacturerMap {
 		
 	}
 	
-	public static ModelManufacturerMap getInstance(){
+	public static ManufacturerSizeMap getInstance(){
 		return instance;
 	}
 	
-	public String getManufacturer(String model){
-		return prop.getProperty(model);
+	public String getSize(String manufacturer){
+		return prop.getProperty(manufacturer);
 	}
 	
-	public boolean hasManfucturer(String model){
-		if(prop.getProperty(model) != null){
+	public boolean hasSize(String manufacturer){
+		if(prop.getProperty(manufacturer) != null){
 			return true;
 		}
 		return false;
 	}
-	
 
 }

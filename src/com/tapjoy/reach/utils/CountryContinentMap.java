@@ -1,10 +1,9 @@
-package com.tapjoy.reach.params;
+package com.tapjoy.reach.utils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
