@@ -24,7 +24,7 @@ GET
     <td>Yes</td>
     <td>Integer</td>
     <td>The geoip_continent_id</td>
-    <td>[Geoip Continents Index](geoip_continents_index.md)</td>
+    <td>[Geoip Continents Index](geoip_continent_index.md)</td>
   </tr>
 </table>
 
