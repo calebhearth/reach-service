@@ -1,11 +1,11 @@
 # Platforms Index
-** This endpoint is not currently active **
+** This endpoint is currently under development **
 
 ## Description
 Returns all allowed values for platform.
 
 ## Endpoint
-`/platforms/:platform_id/os_versions`
+`/platform/:platform_id/device_os_version`
 
 ## HTTP Method
 GET
@@ -32,17 +32,16 @@ GET
 
 ```
 [
-  {
-    'id' : 1
-    'name' : '4.1',
+  {"id":1,"name":"2.0","dependents":
+    [
+      {"dependentType":"platform","dependentId":1},
+      {"dependentType":"platform","dependentId":2}
+    ]
   },
-  {
-    'id' : 3
-    'name' : '5.2',
-  }
-  {
-    'id' : 3
-    'name' : '5.3',
+  {"id":2,"name":"2.1","dependents":
+    [
+      {"dependentType":"platform","dependentId":1}
+    ]
   }
 ]
 ```
