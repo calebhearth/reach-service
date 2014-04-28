@@ -1,11 +1,11 @@
 # Geoip Countries Index
-** This endpoint is not currently active **
+** This endpoint is currently active **
 
 ## Description
 Returns all allowed values for geoip_contries for a given continent.
 
 ## Endpoint
-`/geoip_continents/:continent_id/geoip_countries`
+`/geoip_continent/:continent_id/geoip_country`
 
 ## HTTP Method
 GET
@@ -32,33 +32,13 @@ GET
 
 ```
 [
-  {
-    'id' : 1
-    'name' : 'AR',
-    'properName' : 'Argentina',
-    'dependentLocationType' : 'geoip_continent',
-    'dependentLocationId' : 4
-  },
-  {
-    'id' : 2
-    'name' : 'AU',
-    'properName' : 'Austrailia'
-    'dependentLocationType' : 'geoip_continent',
-    'dependentLocationId' : 5
-  }
-  {
-    'id' : 3
-    'name' : 'BR',
-    'properName' : 'Brazil'
-    'dependentLocationType' : 'geoip_continent',
-    'dependentLocationId' : 4
-  }
+  {"id":1,"name":"AR","properName":"Argentina","dependents":[{"dependentType":"geoip_continent","dependentId":1}]},
+  {"id":3,"name":"BR","properName":"Brazil","dependents":[{"dependentType":"geoip_continent","dependentId":1}]}
 ]
 ```
 
 ## Currently Supported Values
-While this endpoint is under development, this is the currently supported list
-of continents.
+The currently supported list of countries.
 
 * AR
 * AU
