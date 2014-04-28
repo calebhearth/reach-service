@@ -5,7 +5,8 @@
 Returns all allowed values for geoip_contries for a given continent.
 
 ## Endpoint
-`/geoip_continent/:continent_id/geoip_country`
+`/api/v1/params/geoip_continent/:continent_id/geoip_country`
+`/api/v1/params/geoip_country` (Returns list of all countries)
 
 ## HTTP Method
 GET
