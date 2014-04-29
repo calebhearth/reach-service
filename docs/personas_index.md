@@ -5,7 +5,7 @@
 Returns all allowed values for personas.
 
 ## Endpoint
-`/api/v1/personas`
+`/api/v1/params/personas`
 
 ## HTTP Method
 GET
