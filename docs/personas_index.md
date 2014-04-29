@@ -1,11 +1,11 @@
 # Personas Index
-** This endpoint is not currently active **
+** This endpoint is currently active **
 
 ## Description
 Returns all allowed values for personas.
 
 ## Endpoint
-`/personas`
+`/api/v1/personas`
 
 ## HTTP Method
 GET
@@ -17,17 +17,8 @@ None
 
 ```
 [
-  {
-    'id' : 1
-    'name' : 'Arcade Gamer',
-    'reach' : '15000',
-    'category' : 'Games',
-  },
-  {
-    'id: 2
-    'name' : 'Fashionista',
-    'reach' : '24242',
-    'category' : 'Lifestyle',
-  }
+  {"id":1,"name":"action game player"},
+  {"id":2,"name":"adventure game player"},
+  {"id":3,"name":"angry birds player"}
 ]
 ```
