@@ -5,7 +5,9 @@
 Returns all allowed values for platform.
 
 ## Endpoint
-`/platform/:platform_id/device_os_version`
+`/platform/:platform_id/device_os_version` (Returns platform specific list of device os versions)
+
+`/api/v1/params/device_os_version` (Returns list of all device os versions)
 
 ## HTTP Method
 GET
