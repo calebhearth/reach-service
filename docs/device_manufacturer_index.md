@@ -37,8 +37,23 @@ GET
 
 ## Example Response
 
+```
 [
-  {"id":1,"name":"PHONE"},
-  {"id":2,"name":"TABLET"}
+  {"id":1,"name":"Samsung","dependents":
+    [
+      {"dependentType":"device_size","dependentId":2},
+      {"dependentType":"device_size","dependentId":1}
+    ]
+  },
+  {"id":2,"name":"HTC","dependents":
+    [
+      {"dependentType":"device_size","dependentId":1}
+    ]
+  },
+  {"id":3,"name":"LG","dependents":
+    [
+      {"dependentType":"device_size","dependentId":1}
+    ]
+  }
 ]
-
+```
