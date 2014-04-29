@@ -1,11 +1,11 @@
 # Platforms Index
-** This endpoint is not currently active **
+** This endpoint is currently active **
 
 ## Description
 Returns all allowed values for platform.
 
 ## Endpoint
-`/platforms`
+`/api/v1/params/platform`
 
 ## HTTP Method
 GET
