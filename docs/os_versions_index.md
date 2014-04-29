@@ -1,5 +1,5 @@
 # Platforms Index
-** This endpoint is currently under development **
+** This endpoint is available **
 
 ## Description
 Returns all allowed values for platform.
