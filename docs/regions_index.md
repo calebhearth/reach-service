@@ -1,11 +1,13 @@
 # Regions Index
-** This endpoint is not currently active **
+** This endpoint is currently active **
 
 ## Description
 Returns all allowed values for regions for a given geoip_country.
 
 ## Endpoint
-`/geoip_countries/:country_id/regions`
+`/api/v1/params/geoip_country/:country_id/regions` (Returns list of regions for a country)
+
+`/api/v1/params/regions` (Returns list of all regions)
 
 ## HTTP Method
 GET
@@ -32,33 +34,21 @@ GET
 
 ```
 [
-  {
-    'id' : 1
-    'name' : 'NC',
-    'properName' : 'North Carolina'
-    'dependentLocationType' : 'geoip_country',
-    'dependentLocationId' : 8
+  {"id":1,"name":"AL","properName":"Alabama","dependents":
+    [
+      {"dependentType":"geoip_country","dependentId":31}
+    ]
   },
-  {
-    'id' : 2
-    'name' : 'Washington',
-    'properName' : 'Washington'
-    'dependentLocationType' : 'geoip_country',
-    'dependentLocationId' : 8
-  }
-  {
-    'id' : 3
-    'name' : 'TX',
-    'properName' : 'Texas'
-    'dependentLocationType' : 'geoip_country',
-    'dependentLocationId' : 8
+  {"id":2,"name":"AK","properName":"Alaska","dependents":
+    [
+      {"dependentType":"geoip_country","dependentId":31}
+    ]
   }
 ]
 ```
 
 ## Currently Supported Values
-While this endpoint is under development, this is the currently supported list
-of regions.
+This is the currently supported list of regions.
 
 ### US States
 * http://en.wikipedia.org/wiki/List_of_states_and_territories_of_the_United_States
