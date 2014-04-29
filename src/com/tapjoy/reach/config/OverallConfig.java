@@ -13,7 +13,7 @@ public class OverallConfig {
 			+ "../bin/";
 	
 	// The actual request will be used for health check ("http://reach:8888/health")
-		public static String healthCheck = "/?geoip_country=US&sources=offerwall&geoip_continent=NA";	
+		public static String healthCheck = "/api/v1/?geoip_country=US&sources=offerwall&geoip_continent=NA";	
 	
 	
 

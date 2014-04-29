@@ -1,15 +1,14 @@
 package com.tapjoy.reach.params;
 
 public enum KeyEnum {
-	//device_size("device size"),
 	source("sources"),
 	language("language"),
 	apple_product_line("apple_product_line"),
 	platform("platform"),
 	device_os_version("device_os_version"),
-	device_manufacturer("device_manufacturer"),	
-	device_type("device_type"),
 	device_size("device_size"),
+	device_manufacturer("device_manufacturer"),	
+	device_model("device_model"),
 	geoip_continent("geoip_continent"),
 	geoip_country("geoip_country"),
 	geoip_region("regions"),

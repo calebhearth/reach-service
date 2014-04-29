@@ -13,6 +13,7 @@ import com.tapjoy.reach.params.AppleProductLine;
 import com.tapjoy.reach.params.KeyEnum;
 import com.tapjoy.reach.params.Platform;
 import com.tapjoy.reach.utils.DeviceCombinationGenerator;
+import com.tapjoy.reach.utils.DeviceSecondaryCombinationGenerator;
 import com.tapjoy.reach.utils.GeoCombinationGenerator;
 
 public class KeyParser {
@@ -20,8 +21,8 @@ public class KeyParser {
 	private final int SOURCE = 0;
 	private final int LANG = SOURCE + 1;
 	private final int DEVICE = LANG + 1;
-	//private final int DEVICE_SECONDARY = DEVICE + 1;
-	private final int GEO = DEVICE + 1;
+	private final int DEVICE_SECONDARY = DEVICE + 1;
+	private final int GEO = DEVICE_SECONDARY + 1;
 
 	private Set<String> keyList;
 
@@ -134,7 +135,7 @@ public class KeyParser {
 			}
 			break;
 			
-	/*	case DEVICE_SECONDARY: 
+		case DEVICE_SECONDARY: 
 			List<String> deviceSecondary = new ArrayList<String>(
 					new DeviceSecondaryCombinationGenerator()
 							.getDeviceSecondaryCombinations(params));
@@ -145,7 +146,7 @@ public class KeyParser {
 				String newKey = key + "-" + device;
 				createKeys(params, newKey, pos + 1);
 			}
-			break;*/
+			break;
 			
 
 		case GEO:

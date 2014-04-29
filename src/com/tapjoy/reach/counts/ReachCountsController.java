@@ -53,15 +53,6 @@ public class ReachCountsController {
 			params = parsePostRequestParams(request);
 		}
 		
-		if (!StringUtils.startsWithIgnoreCase(reqStr, "/health")) {
-			logger.info(reqStr);
-		}
-		if (StringUtils.startsWithIgnoreCase(reqStr, "/health")) {
-			reqStr = OverallConfig.healthCheck;
-		}
-		
-
-		
 		if (params == null) {
 			logger.error("Error while parsing params");
 			ErrorModel errorModel = new ErrorModel(HttpResponseStatus.BAD_REQUEST.getCode(), "Invalid params");
@@ -120,7 +111,7 @@ public class ReachCountsController {
 					}
 				}
 				break;
-			case device_type:
+			case device_model:
 				for (String v : values) {
 					check = verifyDeviceModel(v);
 					if (!check) {

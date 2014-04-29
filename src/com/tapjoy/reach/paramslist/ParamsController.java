@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 
+import com.tapjoy.reach.params.KeyEnum;
 import com.tapjoy.reach.service.ResponseModel;
 
 public class ParamsController {
@@ -20,12 +21,12 @@ public class ParamsController {
 			return model;
 		}
 		String param = matcher.group(1);
-		ParamsApiEnum paramsApiEnum = ParamsApiEnum.valueOf(param);
-		if(paramsApiEnum == null){
+		KeyEnum key = KeyEnum.getEnum(param);
+		if(key == null){
 			ResponseModel model = new ResponseModel("Invalid parameter:"+param, HttpResponseStatus.BAD_REQUEST, "application/json");
 			return model;
 		}
-		ParamsHelper paramsHelper = new ParamsHelper(reqStr, paramsApiEnum);
+		ParamsHelper paramsHelper = new ParamsHelper(reqStr, key);
 		ResponseModel results = paramsHelper.getResult();
 		return results;
 	}

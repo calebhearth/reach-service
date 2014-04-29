@@ -26,8 +26,8 @@ public class DeviceSecondaryCombinationGenerator {
 		}
 
 		Set<String> models = new HashSet<String>();
-		if (params.get(KeyEnum.getValue(KeyEnum.device_type)) != null) {
-			models.addAll(params.get(KeyEnum.getValue(KeyEnum.device_type)));
+		if (params.get(KeyEnum.getValue(KeyEnum.device_model)) != null) {
+			models.addAll(params.get(KeyEnum.getValue(KeyEnum.device_model)));
 		}
 
 		for (String model : models) {
@@ -35,7 +35,7 @@ public class DeviceSecondaryCombinationGenerator {
 			String[] splits = value.split(",");
 			String manufacturer = splits[0].toUpperCase();
 			String size = splits[1].toUpperCase();
-			String key = size + "-" + manufacturer + "-" + model;
+			String key = size  +"-"+ manufacturer + "-" + model;
 			keys.add(key);
 			sizes.remove(size);
 			manufacturers.remove(manufacturer);
@@ -44,13 +44,23 @@ public class DeviceSecondaryCombinationGenerator {
 		for (String manufacturer : manufacturers) {
 			String value = ManufacturerSizeMap.getInstance().getSize(
 					manufacturer);
-			String[] size = value.split(",");
-			for(String s : size){
-				if(!StringUtils.isBlank(s)){
-					s = s.toUpperCase();
+			if(sizes.size() > 0){
+				for(String s : sizes){
 					String key = s + "-" + manufacturer + "-$";
 					keys.add(key);
-					sizes.remove(s);
+				}
+				sizes.clear();
+			}
+			
+			else {
+				String[] size = value.split(",");
+				for (String s : size) {
+					if (!StringUtils.isBlank(s)) {
+						s = s.toUpperCase();
+						String key = s + "-" + manufacturer + "-$";
+						keys.add(key);
+						sizes.remove(s);
+					}
 				}
 			}
 		}

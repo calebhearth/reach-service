@@ -9,19 +9,19 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-public class ModelManufacturerMap {
+public class DeviceOsVersionMap {
 	
-	private static ModelManufacturerMap instance = new ModelManufacturerMap();
-	private Logger logger = Logger.getLogger(ModelManufacturerMap.class);
+	private static DeviceOsVersionMap instance = new DeviceOsVersionMap();
+	private Logger logger = Logger.getLogger(DeviceOsVersionMap.class);
 	
 	private Properties prop;
 	
-	private ModelManufacturerMap(){
+	private DeviceOsVersionMap(){
 		
 		BufferedReader  input = null;
 		 
 		try { 
-			URL url = ModelManufacturerMap.class.getClassLoader().getResource("model_to_manufacturer.dat");
+			URL url = DeviceOsVersionMap.class.getClassLoader().getResource("device_os_versions.dat");
 			String file = url.getPath();
 			prop = new Properties();
 			input = new BufferedReader(new FileReader(file));
@@ -45,19 +45,12 @@ public class ModelManufacturerMap {
 		
 	}
 	
-	public static ModelManufacturerMap getInstance(){
+	public static DeviceOsVersionMap getInstance(){
 		return instance;
 	}
 	
-	public String getManufacturer(String model){
-		return prop.getProperty(model);
-	}
-	
-	public boolean hasManfucturer(String model){
-		if(prop.getProperty(model) != null){
-			return true;
-		}
-		return false;
+	public String getPlatforms(String version){
+		return prop.getProperty(version);
 	}
 
 	public Set<Object> getKeys() {

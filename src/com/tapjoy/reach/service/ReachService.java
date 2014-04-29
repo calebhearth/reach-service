@@ -3,6 +3,12 @@ package com.tapjoy.reach.service;
 import org.apache.log4j.Logger;
 
 import com.tapjoy.reach.hbase.HBaseWrapper;
+import com.tapjoy.reach.utils.CountryContinentMap;
+import com.tapjoy.reach.utils.ManufacturerSizeMap;
+import com.tapjoy.reach.utils.ModelManufacturerMap;
+import com.tapjoy.reach.utils.PersonaOverlapRateMap;
+import com.tapjoy.reach.utils.RegionCountryMap;
+import com.tapjoy.reach.utils.SourceUniqueRateMap;
 
 
 public class ReachService {
@@ -16,6 +22,12 @@ public class ReachService {
 		//before HBase init, try ping the server 
 		HBaseWrapper.init();  //changed by LJ  //temporarily commented out 09/20
 		//HBaseConcurrentGet.init();
+		CountryContinentMap.getInstance();
+		ManufacturerSizeMap.getInstance();
+		ModelManufacturerMap.getInstance();
+		PersonaOverlapRateMap.getInstance();
+		RegionCountryMap.getInstance();
+		SourceUniqueRateMap.getInstance();
 		
 	}
 	

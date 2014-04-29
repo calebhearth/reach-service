@@ -59,5 +59,9 @@ public class Personas {
 		}
 		return id;
 	}
+	
+	public Map<String, Integer> getPersonaMap(){
+		return personaMap;
+	}
 
 }

@@ -10,6 +10,8 @@ public enum ParamsApiEnum {
 	personas,
 	platforms,
 	regions,
-	sources
+	sources,
+	device_models,
+	device_manufacturers
 
 }
