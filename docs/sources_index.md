@@ -1,11 +1,11 @@
 # Sources Index
-** This endpoint is not currently active **
+** This endpoint is currently active **
 
 ## Description
 Returns all allowed values for source.
 
 ## Endpoint
-`/sources`
+`/api/v1/params/sources`
 
 ## HTTP Method
 GET
@@ -23,7 +23,7 @@ None
   },
   {
     'id' : 2
-    'name' : 'direct',
+    'name' : 'direct_play',
   }
   {
     'id' : 3
@@ -33,15 +33,13 @@ None
 ```
 
 ## Currently Supported Values
-While this endpoint is under development, this is the currently supported list
-of sources.
+This is the currently supported list of sources.
 
 * premium
-* secondary
-* direct play
+* direct_play
 * offerwall
 * featured
-* display ad
-* video carouse
-* tapjoy.com
-* publisher message
+* display_ad
+* video_carousel
+* tj_games
+* publisher_message
