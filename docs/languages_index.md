@@ -5,7 +5,7 @@
 Returns all allowed values for language.
 
 ## Endpoint
-`/api/v1/params/language`
+`/api/v1/params/languages`
 
 ## HTTP Method
 GET

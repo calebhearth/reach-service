@@ -5,7 +5,7 @@
 Returns all allowed values for device size.
 
 ## Endpoint
-`/api/v1/params/device_size`
+`/api/v1/params/device_sizes`
 
 ## HTTP Method
 GET

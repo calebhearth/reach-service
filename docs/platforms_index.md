@@ -5,7 +5,7 @@
 Returns all allowed values for platform.
 
 ## Endpoint
-`/api/v1/params/platform`
+`/api/v1/params/platforms`
 
 ## HTTP Method
 GET

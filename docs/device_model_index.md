@@ -7,9 +7,9 @@ Returns all allowed values for device_model for a given manufacturer or a list o
 
 ## Endpoint
 
-`/api/v1/params/device_manufacturer/:device_manufacturer_id/device_model` (Returns list of device_manufacturer for a device_size)
+`/api/v1/params/device_manufacturer/:device_manufacturer_id/device_models` (Returns list of device_manufacturer for a device_size)
 
-`/api/v1/params/device_model` (Returns list of all device_model)
+`/api/v1/params/device_models` (Returns list of all device_model)
 
 ## HTTP Method
 

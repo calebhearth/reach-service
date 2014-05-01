@@ -5,7 +5,7 @@
 Returns all allowed values for geoip_content.
 
 ## Endpoint
-`/api/v1/params/geoip_continent`
+`/api/v1/params/geoip_continents`
 
 ## HTTP Method
 GET

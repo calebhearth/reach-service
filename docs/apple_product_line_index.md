@@ -5,7 +5,7 @@
 Returns all allowed values for apple product lines.
 
 ## Endpoint
-`/api/v1/params/apple_product_line`
+`/api/v1/params/apple_product_lines`
 
 ## HTTP Method
 GET

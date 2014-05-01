@@ -4,7 +4,7 @@
 Returns Reach information for a submitted set of parameters.
 
 ## Endpoint
-`/reach_count`
+`/reach_counts`
 
 ## HTTP Method
 GET
@@ -107,5 +107,5 @@ geoip_country to matching values</td>
 
 ## Example Call
 ```
-/reach_count?geoip_country%5B%5D=USs&geoip_country%5B%5D=CA&platform%5B%5D=iose&apple_product_line%5B%5D=iPhonee&languages%5B%5D=en&os_versions%5B%5D=3&os_versions%5B%5D=4&os_versions%5B%5D=5&sources%5B%5D=offerwall
+/reach_counts?geoip_country%5B%5D=USs&geoip_country%5B%5D=CA&platform%5B%5D=iose&apple_product_line%5B%5D=iPhonee&languages%5B%5D=en&os_versions%5B%5D=3&os_versions%5B%5D=4&os_versions%5B%5D=5&sources%5B%5D=offerwall
 ```
