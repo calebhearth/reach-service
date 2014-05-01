@@ -39,21 +39,7 @@ GET
 
 ```
 [
-  {"id":1,"name":"Samsung","dependents":
-    [
-      {"dependentType":"device_size","dependentId":2},
-      {"dependentType":"device_size","dependentId":1}
-    ]
-  },
-  {"id":2,"name":"HTC","dependents":
-    [
-      {"dependentType":"device_size","dependentId":1}
-    ]
-  },
-  {"id":3,"name":"LG","dependents":
-    [
-      {"dependentType":"device_size","dependentId":1}
-    ]
-  }
-]
+  {"id": 1,"name": "Samsung","deviceSizeIds": [1, 2]},
+  {"id": 2,"name": "HTC","deviceSizeIds": [1]},
+  {"id": 3,"name": "LG","deviceSizeIds": [1]}]
 ```

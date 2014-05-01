@@ -39,23 +39,8 @@ GET
 
 ```
 [
-  {"id":1,"name":"GALAXY S","dependents":
-    [
-      {"dependentType":"device_manufacturer","dependentId":1},
-      {"dependentType":"device_size","dependentId":1}
-    ]
-  },
-  {"id":2,"name":"GALAXY S MINI","dependents":
-    [
-      {"dependentType":"device_manufacturer","dependentId":1},
-      {"dependentType":"device_size","dependentId":1}
-    ]
-  },
-  {"id":3,"name":"GALAXY S DUOS","dependents":
-    [
-      {"dependentType":"device_manufacturer","dependentId":1},
-      {"dependentType":"device_size","dependentId":1}
-    ]
-  }
+  {"id": 1,"name": "GALAXY S", "deviceManufacturerId": 1, "deviceSizeId": 1},
+  {"id":2, "name": "GALAXY S MINI", "deviceManufacturerId": 1, "deviceSizeId": 1},
+  {"id":3, "name": "GALAXY S DUOS", "deviceManufacturerId": 1, "deviceSizeId": 1}
 ]
 ```

@@ -34,16 +34,7 @@ GET
 
 ```
 [
-  {"id":1,"name":"2.0","dependents":
-    [
-      {"dependentType":"platform","dependentId":1},
-      {"dependentType":"platform","dependentId":2}
-    ]
-  },
-  {"id":2,"name":"2.1","dependents":
-    [
-      {"dependentType":"platform","dependentId":1}
-    ]
-  }
+  {"id": 1, "name": "2.0", "platformIds": [1, 2]},
+  {"id": 2, "name": "2.1", "platformIds": [1]}
 ]
 ```

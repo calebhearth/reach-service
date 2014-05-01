@@ -5,7 +5,7 @@
 Returns all allowed values for geoip_contries for a given continent.
 
 ## Endpoint
-`/api/v1/params/geoip_continent/:continent_id/geoip_country` 
+`/api/v1/params/geoip_continent/:continent_id/geoip_country`
 
 `/api/v1/params/geoip_country` (Returns list of all countries)
 
@@ -34,8 +34,8 @@ GET
 
 ```
 [
-  {"id":1,"name":"AR","properName":"Argentina","dependents":[{"dependentType":"geoip_continent","dependentId":1}]},
-  {"id":3,"name":"BR","properName":"Brazil","dependents":[{"dependentType":"geoip_continent","dependentId":1}]}
+  {"geoipContinentId": 1, "id": 1, "name": "AR", "properName": "Argentina"},
+  {"geoipContinentId": 1, "id": 3, "name": "BR", "properName": "Brazil"}
 ]
 ```
 

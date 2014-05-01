@@ -34,16 +34,8 @@ GET
 
 ```
 [
-  {"id":1,"name":"AL","properName":"Alabama","dependents":
-    [
-      {"dependentType":"geoip_country","dependentId":31}
-    ]
-  },
-  {"id":2,"name":"AK","properName":"Alaska","dependents":
-    [
-      {"dependentType":"geoip_country","dependentId":31}
-    ]
-  }
+  {"geoipCountryId": 31, "id": 1, "name": "AL", "properName": "Alabama"},
+  {"geoipCountryId": 31, "id": 2, "name": "AK", "properName": "Alaska"}
 ]
 ```
 
